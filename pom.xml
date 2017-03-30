@@ -16,7 +16,7 @@
         <spark.version>1.6.3</spark.version>
         <hadoop.version>2.6.5</hadoop.version>
         <kafka.version>0.10.1.1</kafka.version>
-        <spring.version>4.3.7.RELEASE</spring.version>
+        <mybatis.version>3.2.1</mybatis.version>
     </properties>
 
     <dependencies>
@@ -225,7 +225,6 @@
             </plugin>
         </plugins>
 
-        <finalName>LargeCommercialDataAnalysisTechnologyBasedOnWIFIProbe</finalName>
     </build>
 
 
