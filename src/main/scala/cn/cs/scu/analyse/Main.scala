@@ -17,15 +17,16 @@ import org.apache.spark.streaming.StreamingContext
   * @author Wang Han
   */
 object Main {
-    def main(args: Array[String]): Unit = {
-        val init: (SparkContext, SQLContext, StreamingContext) = InitUnits.initSparkContext()
-        val ssc: StreamingContext = init._3
-        // 设置检查点
-        ssc.checkpoint(ConfigurationManager.getString(Constants.SPARK_CHECK_POINT_DIR))
+  def main(args: Array[String]): Unit = {
+    val init: (SparkContext, SQLContext, StreamingContext) = InitUnits.initSparkContext()
+    val ssc: StreamingContext = init._3
+    // 设置检查点
+    ssc.checkpoint(ConfigurationManager.getString(Constants.SPARK_CHECK_POINT_DIR))
 
-        val wifiProbeData = ssc.textFileStream(ConfigurationManager.getString(Constants.SPARK_DATA_SOURCE))
-        
-        ssc.start()
-        ssc.awaitTermination()
-    }
+    val wifiProbeData = ssc.textFileStream(ConfigurationManager.getString(Constants.SPARK_DATA_SOURCE))
+
+
+    ssc.start()
+    ssc.awaitTermination()
+  }
 }
