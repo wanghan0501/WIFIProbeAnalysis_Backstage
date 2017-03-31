@@ -1,5 +1,7 @@
-package edu.cs.scu.scalautils
+package cn.cs.scu.scalautils
 
+import cn.cs.scu.conf.ConfigurationManager
+import cn.cs.scu.constants.Constants
 import edu.cs.scu.conf.ConfigurationManager
 import edu.cs.scu.constants.Constants
 import org.apache.log4j.{Level, Logger}

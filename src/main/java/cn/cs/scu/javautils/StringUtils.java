@@ -1,4 +1,4 @@
-package edu.cs.scu.javautils;
+package cn.cs.scu.javautils;
 
 /**
  * 字符串工具类
