@@ -1,7 +1,5 @@
 package cn.cs.scu.analyse
 
-import cn.cs.scu.conf.ConfigurationManager
-import cn.cs.scu.constants.Constants
 import cn.cs.scu.scalautils.InitUnits
 import org.apache.spark.SparkContext
 import org.apache.spark.sql.SQLContext
@@ -19,14 +17,16 @@ import org.apache.spark.streaming.StreamingContext
 object Main {
   def main(args: Array[String]): Unit = {
     val init: (SparkContext, SQLContext, StreamingContext) = InitUnits.initSparkContext()
-    val ssc: StreamingContext = init._3
-    // 设置检查点
-    ssc.checkpoint(ConfigurationManager.getString(Constants.SPARK_CHECK_POINT_DIR))
+    val sQLContext = init._2
+    val streamingContext: StreamingContext = init._3
 
-    val wifiProbeData = ssc.textFileStream(ConfigurationManager.getString(Constants.SPARK_DATA_SOURCE))
+    val wifiProbeData = InitUnits.getDStream(streamingContext)
+    wifiProbeData.foreachRDD(t=>{
+      val df = sQLContext.read.json(t)
+      df.show()
+    })
 
-
-    ssc.start()
-    ssc.awaitTermination()
+    streamingContext.start()
+    streamingContext.awaitTermination()
   }
 }

@@ -6,6 +6,7 @@ import org.apache.log4j.{Level, Logger}
 import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.sql.SQLContext
 import org.apache.spark.sql.hive.HiveContext
+import org.apache.spark.streaming.dstream.DStream
 import org.apache.spark.streaming.{Seconds, StreamingContext}
 
 /**
@@ -48,9 +49,9 @@ object InitUnits {
   def getSparkConf: SparkConf = {
     val local = ConfigurationManager.getBoolean(Constants.SPARK_LOCAL)
     if (local)
-      new SparkConf().setAppName(Constants.SPARK_APP_NAME_SESSION).setMaster(Constants.SPARK_MASTER)
+      new SparkConf().setAppName(Constants.SPARK_APP_NAME).setMaster(Constants.SPARK_MASTER)
     else
-      new SparkConf().setAppName(Constants.SPARK_APP_NAME_SESSION)
+      new SparkConf().setAppName(Constants.SPARK_APP_NAME)
   }
 
   /**
@@ -64,7 +65,7 @@ object InitUnits {
     if (local)
       new SQLContext(sc)
     else
-      new HiveContext(sc)
+      new SQLContext(sc)
   }
 
   /**
@@ -80,5 +81,22 @@ object InitUnits {
     }
 
     new StreamingContext(sparkContext, Seconds(ConfigurationManager.getLong(Constants.SPARK_STREAMING_COLLECT_TIME)))
+  }
+
+
+  /**
+    * 加载检查点及源数据目录
+    *
+    * @param streamingContext
+    * @return
+    */
+  def getDStream(streamingContext: StreamingContext): DStream[String] = {
+    if (ConfigurationManager.getBoolean(Constants.SPARK_LOCAL)) {
+      streamingContext.checkpoint(ConfigurationManager.getString(Constants.SPARK_LOCAL_CHECK_POINT_DIR))
+      streamingContext.textFileStream(ConfigurationManager.getString(Constants.SPARK_LOCAL_DATA_SOURCE))
+    } else {
+      streamingContext.checkpoint(ConfigurationManager.getString(Constants.SPARK_CHECK_POINT_DIR))
+      streamingContext.textFileStream(ConfigurationManager.getString(Constants.SPARK_DATA_SOURCE))
+    }
   }
 }

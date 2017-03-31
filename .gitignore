@@ -31,3 +31,4 @@ gen
 hs_err_pid*
 
 /dependency-reduced-pom.xml
+/wifiProbe/
