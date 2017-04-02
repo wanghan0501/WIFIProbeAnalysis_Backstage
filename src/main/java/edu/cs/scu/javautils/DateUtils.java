@@ -1,4 +1,4 @@
-package cn.cs.scu.javautils;
+package edu.cs.scu.javautils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

@@ -1,4 +1,4 @@
-package cn.cs.scu.conf;
+package edu.cs.scu.conf;
 
 import java.io.IOException;
 import java.io.InputStream;

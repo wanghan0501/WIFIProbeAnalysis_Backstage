@@ -1,4 +1,4 @@
-package cn.cs.scu.constants;
+package edu.cs.scu.constants;
 
 /**
  * 常量接口类
@@ -11,7 +11,7 @@ package cn.cs.scu.constants;
  */
 public interface Constants {
     // 定义本地运行的线程数量
-    String SPARK_MASTER = "local[4]";
+    String SPARK_MASTER = "local[2]";
     String SPARK_LOCAL = "spark.local";
     // 定义本地源数据目录
     String SPARK_LOCAL_DATA_SOURCE="spark.local.data.source";

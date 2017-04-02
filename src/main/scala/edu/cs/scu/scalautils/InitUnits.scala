@@ -1,7 +1,7 @@
-package cn.cs.scu.scalautils
+package edu.cs.scu.scalautils
 
-import cn.cs.scu.conf.ConfigurationManager
-import cn.cs.scu.constants.Constants
+import edu.cs.scu.conf.ConfigurationManager
+import edu.cs.scu.constants.Constants
 import org.apache.log4j.{Level, Logger}
 import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.sql.SQLContext
@@ -36,7 +36,7 @@ object InitUnits {
     //streamingContext上下文环境
     val streamingContext = getStreamingContext(sc)
     // 设置Log等级
-    Logger.getRootLogger.setLevel(Level.OFF)
+    Logger.getRootLogger.setLevel(Level.WARN)
 
     (sc, sqlContext, streamingContext)
   }
@@ -65,7 +65,7 @@ object InitUnits {
     if (local)
       new SQLContext(sc)
     else
-      new SQLContext(sc)
+      new HiveContext(sc)
   }
 
   /**
@@ -92,10 +92,10 @@ object InitUnits {
     */
   def getDStream(streamingContext: StreamingContext): DStream[String] = {
     if (ConfigurationManager.getBoolean(Constants.SPARK_LOCAL)) {
-      streamingContext.checkpoint(ConfigurationManager.getString(Constants.SPARK_LOCAL_CHECK_POINT_DIR))
+      //streamingContext.checkpoint(ConfigurationManager.getString(Constants.SPARK_LOCAL_CHECK_POINT_DIR))
       streamingContext.textFileStream(ConfigurationManager.getString(Constants.SPARK_LOCAL_DATA_SOURCE))
     } else {
-      streamingContext.checkpoint(ConfigurationManager.getString(Constants.SPARK_CHECK_POINT_DIR))
+      //streamingContext.checkpoint(ConfigurationManager.getString(Constants.SPARK_CHECK_POINT_DIR))
       streamingContext.textFileStream(ConfigurationManager.getString(Constants.SPARK_DATA_SOURCE))
     }
   }
