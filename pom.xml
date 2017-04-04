@@ -16,6 +16,7 @@
         <spark.version>1.6.3</spark.version>
         <hadoop.version>2.6.5</hadoop.version>
         <kafka.version>0.10.1.1</kafka.version>
+        <jpython.version>2.7.0</jpython.version>
         <mybatis.version>3.2.1</mybatis.version>
         <mysql.connector.java.version>5.1.6</mysql.connector.java.version>
         <fastjson.version>1.2.30</fastjson.version>
@@ -107,6 +108,12 @@
             <artifactId>mybatis</artifactId>
             <version>${mybatis.version}</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.python/jython -->
+        <dependency>
+            <groupId>org.python</groupId>
+            <artifactId>jython</artifactId>
+            <version>${jpython.version}</version>
+        </dependency>
     </dependencies>
 
 
@@ -141,6 +148,7 @@
                             <sources>
                                 <!-- 我们可以通过在这里添加多个source节点，来添加任意多个源文件夹 -->
                                 <source>src/main/java</source>
+                                <source>src/main/jython</source>
                             </sources>
                         </configuration>
                     </execution>
