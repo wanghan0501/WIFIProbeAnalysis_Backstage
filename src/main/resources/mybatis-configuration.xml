@@ -21,6 +21,6 @@
         </environment>
     </environments>
     <mappers>
-        <mapper resource="task-info-dao.xml"/>
+        <mapper resource="edu/cs/scu/dao/TaskDao.xml"/>
     </mappers>
 </configuration>

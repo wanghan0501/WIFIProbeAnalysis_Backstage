@@ -38,7 +38,6 @@ object Main {
     //        StructField("tmc", StringType, true) ::
     //        StructField("ts", StringType, true) :: Nil)
     //
-    SparkSession
     val wifiProbeData = InitUnits.getDStream(streamingContext)
     wifiProbeData.foreachRDD(foreachFunc = rdd => {
       if (rdd.count() >= 1) {
