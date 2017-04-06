@@ -25,4 +25,3 @@
     <select id="getTaskById" resultType="edu.cs.scu.bean.TaskBean"></select>
 
 </mapper>
-    
