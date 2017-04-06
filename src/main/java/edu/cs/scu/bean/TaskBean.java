@@ -1,4 +1,4 @@
-package edu.cs.scu.domain;
+package edu.cs.scu.bean;
 
 import java.io.Serializable;
 
@@ -11,7 +11,7 @@ import java.io.Serializable;
  *
  * @author Wang Han
  */
-public class Task implements Serializable {
+public class TaskBean implements Serializable {
 
     private static final long serialVersinUID = 351877796426921776L;
 

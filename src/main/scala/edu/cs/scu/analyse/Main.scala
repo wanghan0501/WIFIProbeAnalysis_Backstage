@@ -1,6 +1,7 @@
 package edu.cs.scu.analyse
 
 import edu.cs.scu.scalautils.InitUnits
+import org.apache.hadoop.hive.ql.exec.spark.session.SparkSession
 import org.apache.spark.SparkContext
 import org.apache.spark.sql.{Row, SQLContext}
 import org.apache.spark.streaming.StreamingContext
@@ -37,7 +38,7 @@ object Main {
     //        StructField("tmc", StringType, true) ::
     //        StructField("ts", StringType, true) :: Nil)
     //
-
+    SparkSession
     val wifiProbeData = InitUnits.getDStream(streamingContext)
     wifiProbeData.foreachRDD(foreachFunc = rdd => {
       if (rdd.count() >= 1) {
