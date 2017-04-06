@@ -1,6 +1,5 @@
 package edu.cs.scu.dao;
 
-import com.alibaba.fastjson.JSON;
 import edu.cs.scu.bean.TaskBean;
 
 import java.util.List;
@@ -15,7 +14,7 @@ import java.util.List;
  *
  * @author Wang Han
  */
-public interface TaskInfoDao {
+public interface TaskDao {
     //查询总数
     public int getTaskCount();
 
@@ -23,5 +22,7 @@ public interface TaskInfoDao {
     public List<TaskBean> getTaskInfo();
 
     //根据条件查询用户信息
-    public TaskBean getTaskById(JSON json);
+    public TaskBean getTaskById(Long id);
+
+    public void addTask(TaskBean taskBean);
 }

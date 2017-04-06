@@ -32,7 +32,7 @@ public class ConfigurationManager {
      * @param key
      * @return
      */
-    private static String getProperty(String key) {
+    private static synchronized String getProperty(String key) {
         return properties.getProperty(key);
     }
 
@@ -43,7 +43,7 @@ public class ConfigurationManager {
      * @param key
      * @return
      */
-    public static String getString(String key) {
+    public static synchronized String getString(String key) {
         return getProperty(key);
     }
 
@@ -53,7 +53,7 @@ public class ConfigurationManager {
      * @param key
      * @return
      */
-    public static Integer getInteger(String key) {
+    public static synchronized Integer getInteger(String key) {
         String value = getProperty(key);
         try {
             return Integer.valueOf(value);
@@ -70,7 +70,7 @@ public class ConfigurationManager {
      * @param key
      * @return
      */
-    public static Boolean getBoolean(String key) {
+    public static synchronized Boolean getBoolean(String key) {
         String value = getProperty(key);
         try {
             return Boolean.valueOf(value);
@@ -87,7 +87,7 @@ public class ConfigurationManager {
      * @param key
      * @return
      */
-    public static Long getLong(String key) {
+    public static synchronized Long getLong(String key) {
         String value = getProperty(key);
         try {
             return Long.valueOf(value);
@@ -104,7 +104,7 @@ public class ConfigurationManager {
      * @param key
      * @return
      */
-    public static Double getDouble(String key) {
+    public static synchronized Double getDouble(String key) {
         String value = getProperty(key);
         try {
             return Double.valueOf(value);

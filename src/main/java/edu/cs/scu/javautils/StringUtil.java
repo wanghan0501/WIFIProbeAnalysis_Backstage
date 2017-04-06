@@ -9,7 +9,7 @@ package edu.cs.scu.javautils;
  *
  * @author Wang Han
  */
-public class StringUtils {
+public class StringUtil {
 
     /**
      * 从字符串中提取指定的字段
@@ -19,7 +19,7 @@ public class StringUtils {
      * @param field     指定的字段
      * @return
      */
-    public static String getFieldFromConcatString(String str, String delimiter, String field) {
+    public static synchronized String getFieldFromConcatString(String str, String delimiter, String field) {
 
         try {
             String[] fileds = str.split(delimiter);
@@ -49,7 +49,7 @@ public class StringUtils {
      * @param newfiledValue 新值
      * @return String
      */
-    public static String setFieldInConcatString(String str, String delimiter, String field, String newfiledValue) {
+    public static synchronized String setFieldInConcatString(String str, String delimiter, String field, String newfiledValue) {
 
         String[] fields = str.split(delimiter);
         for (int i = 0; i < fields.length; i++) {
