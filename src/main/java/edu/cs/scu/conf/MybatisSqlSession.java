@@ -20,8 +20,8 @@ import java.io.Reader;
 
 public class MybatisSqlSession {
 
-    public static SqlSession sqlSession = null;
-    public static SqlSessionFactory sqlSessionFactory = null;
+    private static SqlSession sqlSession = null;
+    private static SqlSessionFactory sqlSessionFactory = null;
 
     static {
 

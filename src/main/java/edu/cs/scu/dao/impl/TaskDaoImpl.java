@@ -4,6 +4,7 @@ import edu.cs.scu.bean.TaskBean;
 import edu.cs.scu.conf.MybatisSqlSession;
 import edu.cs.scu.dao.TaskDao;
 import org.apache.ibatis.session.SqlSession;
+import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,12 +19,18 @@ import java.util.List;
  * @author Wang Han
  */
 public class TaskDaoImpl implements TaskDao {
+    // 得到log记录器
+    private static final Logger logger = Logger.getLogger(TaskDaoImpl.class);
+
     @Override
     public int getTaskCount() {
-        int count;
+        int count = 0;
         try {
             TaskDao taskDao = MybatisSqlSession.getSqlSession().getMapper(TaskDao.class);
             count = taskDao.getTaskCount();
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            logger.error(e.getMessage());
         } finally {
             MybatisSqlSession.getSqlSession().close();
         }
@@ -39,6 +46,7 @@ public class TaskDaoImpl implements TaskDao {
             taskBeanList = taskDao.getTaskInfo();
         } catch (Exception e) {
             System.err.println(e.getMessage());
+            logger.error(e.getMessage());
         } finally {
             MybatisSqlSession.getSqlSession().close();
         }
@@ -54,6 +62,7 @@ public class TaskDaoImpl implements TaskDao {
             taskBean = taskDao.getTaskById(id);
         } catch (Exception e) {
             System.err.println(e.getMessage());
+            logger.error(e.getMessage());
         } finally {
             MybatisSqlSession.getSqlSession().close();
         }
@@ -67,11 +76,11 @@ public class TaskDaoImpl implements TaskDao {
 
         try {
             TaskDao taskDao = sqlSession.getMapper(TaskDao.class);
-            System.out.println(taskBean.getCreateTime());
             taskDao.addTask(taskBean);
             sqlSession.commit();
         } catch (Exception e) {
             System.err.println(e.getMessage());
+            logger.error(e.getMessage());
         } finally {
             sqlSession.close();
         }
