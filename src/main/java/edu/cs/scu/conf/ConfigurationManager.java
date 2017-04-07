@@ -1,5 +1,7 @@
 package edu.cs.scu.conf;
 
+import org.apache.log4j.Logger;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -16,12 +18,14 @@ import java.util.Properties;
 public class ConfigurationManager {
     // 配置属性
     private static Properties properties = new Properties();
+    private static final Logger logger = Logger.getLogger(ConfigurationManager.class);
 
     static {
         InputStream in = ConfigurationManager.class.getClassLoader().getResourceAsStream("my.properties");
         try {
             properties.load(in);
         } catch (IOException e) {
+            logger.error(e.getStackTrace());
             e.printStackTrace();
         }
     }
@@ -33,7 +37,14 @@ public class ConfigurationManager {
      * @return
      */
     private static synchronized String getProperty(String key) {
-        return properties.getProperty(key);
+        try {
+            return properties.getProperty(key);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
 
@@ -58,6 +69,7 @@ public class ConfigurationManager {
         try {
             return Integer.valueOf(value);
         } catch (Exception e) {
+            logger.error(e.getStackTrace());
             e.printStackTrace();
         }
 
@@ -75,6 +87,7 @@ public class ConfigurationManager {
         try {
             return Boolean.valueOf(value);
         } catch (Exception e) {
+            logger.error(e.getStackTrace());
             e.printStackTrace();
         }
 
@@ -92,6 +105,7 @@ public class ConfigurationManager {
         try {
             return Long.valueOf(value);
         } catch (Exception e) {
+            logger.error(e.getStackTrace());
             e.printStackTrace();
         }
 
@@ -109,6 +123,7 @@ public class ConfigurationManager {
         try {
             return Double.valueOf(value);
         } catch (Exception e) {
+            logger.error(e.getStackTrace());
             e.printStackTrace();
         }
 

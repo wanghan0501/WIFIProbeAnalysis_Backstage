@@ -39,6 +39,7 @@ public class StringUtil {
             }
         } catch (Exception e) {
             logger.error(e.getStackTrace());
+            System.err.println(e.getStackTrace());
         }
 
         return null;

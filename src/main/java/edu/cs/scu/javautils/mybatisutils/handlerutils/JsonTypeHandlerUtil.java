@@ -32,6 +32,7 @@ public class JsonTypeHandlerUtil extends BaseTypeHandler<Object> {
             return JsonUtil.parse(rs.getString(columnName), Object.class);
         } catch (Exception e) {
             logger.error(e.getStackTrace());
+            System.err.println(e.getStackTrace());
         }
 
         return null;
@@ -43,6 +44,7 @@ public class JsonTypeHandlerUtil extends BaseTypeHandler<Object> {
             return JsonUtil.parse(rs.getString(columnIndex), Object.class);
         } catch (Exception e) {
             logger.error(e.getStackTrace());
+            System.err.println(e.getStackTrace());
         }
 
         return null;
@@ -54,6 +56,7 @@ public class JsonTypeHandlerUtil extends BaseTypeHandler<Object> {
             return JsonUtil.parse(cs.getString(columnIndex), Object.class);
         } catch (Exception e) {
             logger.error(e.getStackTrace());
+            System.err.println(e.getStackTrace());
         }
 
         return null;
@@ -65,6 +68,7 @@ public class JsonTypeHandlerUtil extends BaseTypeHandler<Object> {
             ps.setObject(i, JsonUtil.stringify(parameter));
         } catch (Exception e) {
             logger.error(e.getStackTrace());
+            System.err.println(e.getStackTrace());
         }
 
     }

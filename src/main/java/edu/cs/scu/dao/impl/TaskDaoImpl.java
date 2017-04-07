@@ -29,8 +29,8 @@ public class TaskDaoImpl implements TaskDao {
             TaskDao taskDao = MybatisSqlSession.getSqlSession().getMapper(TaskDao.class);
             count = taskDao.getTaskCount();
         } catch (Exception e) {
-            System.err.println(e.getMessage());
-            logger.error(e.getMessage());
+            e.printStackTrace();
+            logger.error(e.getStackTrace());
         } finally {
             MybatisSqlSession.getSqlSession().close();
         }
@@ -45,8 +45,8 @@ public class TaskDaoImpl implements TaskDao {
             TaskDao taskDao = MybatisSqlSession.getSqlSession().getMapper(TaskDao.class);
             taskBeanList = taskDao.getTaskInfo();
         } catch (Exception e) {
-            System.err.println(e.getMessage());
-            logger.error(e.getMessage());
+            e.printStackTrace();
+            logger.error(e.getStackTrace());
         } finally {
             MybatisSqlSession.getSqlSession().close();
         }
@@ -61,8 +61,8 @@ public class TaskDaoImpl implements TaskDao {
             TaskDao taskDao = MybatisSqlSession.getSqlSession().getMapper(TaskDao.class);
             taskBean = taskDao.getTaskById(id);
         } catch (Exception e) {
-            System.err.println(e.getMessage());
-            logger.error(e.getMessage());
+            e.printStackTrace();
+            logger.error(e.getStackTrace());
         } finally {
             MybatisSqlSession.getSqlSession().close();
         }
@@ -79,8 +79,8 @@ public class TaskDaoImpl implements TaskDao {
             taskDao.addTask(taskBean);
             sqlSession.commit();
         } catch (Exception e) {
-            System.err.println(e.getMessage());
-            logger.error(e.getMessage());
+            e.printStackTrace();
+            logger.error(e.getStackTrace());
         } finally {
             sqlSession.close();
         }

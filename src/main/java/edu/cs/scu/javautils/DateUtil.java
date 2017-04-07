@@ -43,6 +43,7 @@ public class DateUtil {
             return TIME_FORMAT.parse(time);
         } catch (ParseException e) {
             logger.error(e.getStackTrace());
+            System.err.println(e.getStackTrace());
         }
 
         return null;
@@ -65,6 +66,7 @@ public class DateUtil {
             }
         } catch (Exception e) {
             logger.error(e.getStackTrace());
+            System.err.println(e.getStackTrace());
         }
 
         return false;
@@ -87,6 +89,7 @@ public class DateUtil {
             }
         } catch (Exception e) {
             logger.error(e.getStackTrace());
+            System.err.println(e.getStackTrace());
         }
 
         return false;

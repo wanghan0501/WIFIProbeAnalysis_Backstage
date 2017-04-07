@@ -29,6 +29,7 @@ public class JsonUtil {
             return JSON.toJSONString(object);
         } catch (Exception e) {
             logger.error(e.getStackTrace());
+            System.err.println(e.getStackTrace());
         }
 
         return null;
@@ -52,6 +53,7 @@ public class JsonUtil {
             return JSON.parseObject(json, clazz);
         } catch (Exception e) {
             logger.error(e.getStackTrace());
+            System.err.println(e.getStackTrace());
         }
 
         return null;
