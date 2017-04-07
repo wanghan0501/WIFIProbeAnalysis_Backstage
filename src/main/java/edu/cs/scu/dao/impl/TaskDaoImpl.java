@@ -71,13 +71,4 @@ public class TaskDaoImpl implements TaskDao {
             MybatisSqlSession.getSqlSession().close();
         }
     }
-
-    public static void main(String[] args){
-        TaskBean taskBean = new TaskBean();
-        TaskDaoImpl taskDaoImpl = new TaskDaoImpl();
-        int count = taskDaoImpl.getTaskCount();
-        List<TaskBean> taskBeanList = new ArrayList<>();
-        taskBean = taskDaoImpl.getTaskById(1L);
-        System.out.println(taskBean.getTaskParam());
-    }
 }

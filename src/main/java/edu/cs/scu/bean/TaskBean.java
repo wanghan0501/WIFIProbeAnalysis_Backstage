@@ -28,6 +28,10 @@ public class TaskBean implements Serializable {
         return serialVersinUID;
     }
 
+    public TaskBean() {
+
+    }
+
     public long getTaskId() {
         return taskId;
     }
