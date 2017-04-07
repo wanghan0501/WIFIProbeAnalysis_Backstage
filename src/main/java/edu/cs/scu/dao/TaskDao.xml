@@ -5,33 +5,25 @@
 
 <mapper namespace="edu.cs.scu.dao.TaskDao">
 
-    <resultMap id="taskList" type="taskBean">
-        <result column="taskId" property="taskId"/>
-        <result column="taskName" property="taskName"/>
-        <result column="startTime" property="startTime"/>
-        <result column="finishTime" property="finishTime"/>
-        <result column="taskType" property="taskType"/>
-        <result column="taskStatus" property="taskStatus"/>
-        <result column="taskParam" property="taskParam"/>
-    </resultMap>
-
     <insert id="addTask" parameterType="taskBean">
     INSERT INTO task (
-        taskId,
-        taskName,
-        startTime,
-        finishTime,
-        taskType,
-        taskStatus,
-        taskParam)
+        task_id,
+        task_name,
+        create_time,
+        start_time,
+        finish_time,
+        task_type,
+        task_status,
+        task_param)
     VALUES (
         #{taskId, jdbcType=INTEGER},
         #{taskName, jdbcType=VARCHAR},
+        #{createTime, jdbcType=VARCHAR},
         #{startTime, jdbcType=DATETIME},
         #{finishTime, jdbcType=DATETIME},
-        #{taskType,jdbcType=VARCHAR},
-        #{taskStatus,jdbcType=VARCHAR},
-        #{taskParam,jdbcType=VARCHAR,typeHandler=edu.cs.scu.javautils.mybatisutils.handlerutils.JsonTypeHandlerUtil})
+        #{taskType, jdbcType=VARCHAR},
+        #{taskStatus, jdbcType=VARCHAR},
+        #{taskParam, jdbcType=VARCHAR,typeHandler=edu.cs.scu.javautils.mybatisutils.handlerutils.JsonTypeHandlerUtil})
     </insert>
 
     <select id="getTaskCount" resultType="java.lang.Integer">
@@ -40,14 +32,14 @@
     </select>
 
     <select id="getTaskInfo" resultType="taskBean">
-        SELECT taskId,taskName,startTime,finishTime,taskType,taskStatus,taskParam
+        SELECT task_id,task_name,create_time,start_time,finish_time,task_type,task_status,task_param
         FROM task
     </select>
 
     <select id="getTaskById" resultType="taskBean">
-        SELECT taskId,taskName,startTime,finishTime,taskType,taskStatus,taskParam
+        SELECT task_id,task_name,create_time,start_time,finish_time,task_type,task_status,task_param
         FROM task
-        WHERE id = #{0}
+        WHERE task_id = #{0}
     </select>
 
 </mapper>
