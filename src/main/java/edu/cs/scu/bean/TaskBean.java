@@ -15,7 +15,7 @@ public class TaskBean implements Serializable {
 
     private static final long serialVersinUID = 351877796426921776L;
 
-    private long taskId;
+    private Long taskId;
     private String taskName;
     private String createTime;
     private String startTime;
@@ -28,10 +28,21 @@ public class TaskBean implements Serializable {
         return serialVersinUID;
     }
 
-    public TaskBean() {
-
+    public TaskBean(Long taskId, String taskName, String createTime, String startTime,
+                    String finishTime, String taskType, String taskStatus, String taskParam) {
+        this.taskId = taskId;
+        this.taskName = taskName;
+        this.createTime = createTime;
+        this.startTime = startTime;
+        this.finishTime = finishTime;
+        this.taskType = taskType;
+        this.taskStatus = taskStatus;
+        this.taskParam = taskParam;
     }
 
+    public TaskBean(){
+
+    }
     public long getTaskId() {
         return taskId;
     }

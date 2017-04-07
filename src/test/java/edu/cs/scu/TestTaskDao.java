@@ -29,7 +29,9 @@ public class TestTaskDao {
         System.out.println("1L 的创建时间" + taskBean.getCreateTime());
         System.out.println("----------");
         taskBean.setTaskId(3L);
-        taskDaoImpl.addTask(taskBean);
+        TaskBean taskBean1 = new TaskBean(4L, "test2", "2017-03-20", "2017-02-20",
+                "2017-03-21", "test2", "test2", "test2");
+        taskDaoImpl.addTask(taskBean1);
         System.out.println("----------");
         System.out.println("finished");
     }

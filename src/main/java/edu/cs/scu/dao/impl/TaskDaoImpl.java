@@ -3,6 +3,7 @@ package edu.cs.scu.dao.impl;
 import edu.cs.scu.bean.TaskBean;
 import edu.cs.scu.conf.MybatisSqlSession;
 import edu.cs.scu.dao.TaskDao;
+import org.apache.ibatis.session.SqlSession;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,13 +63,17 @@ public class TaskDaoImpl implements TaskDao {
 
     @Override
     public void addTask(TaskBean taskBean) {
+        SqlSession sqlSession = MybatisSqlSession.getSqlSession();
+
         try {
-            TaskDao taskDao = MybatisSqlSession.getSqlSession().getMapper(TaskDao.class);
+            TaskDao taskDao = sqlSession.getMapper(TaskDao.class);
+            System.out.println(taskBean.getCreateTime());
             taskDao.addTask(taskBean);
+            sqlSession.commit();
         } catch (Exception e) {
             System.err.println(e.getMessage());
         } finally {
-            MybatisSqlSession.getSqlSession().close();
+            sqlSession.close();
         }
     }
 }
