@@ -1,5 +1,7 @@
 package edu.cs.scu.javautils;
 
+import org.apache.log4j.Logger;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -16,6 +18,8 @@ import java.util.Date;
 
 public class DateUtil {
 
+    // 得到log记录器
+    private static final Logger logger = Logger.getLogger(DateUtil.class);
     private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -38,7 +42,7 @@ public class DateUtil {
         try {
             return TIME_FORMAT.parse(time);
         } catch (ParseException e) {
-            e.printStackTrace();
+            logger.error(e.getStackTrace());
         }
 
         return null;
@@ -60,7 +64,7 @@ public class DateUtil {
                 return true;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getStackTrace());
         }
 
         return false;
@@ -82,7 +86,7 @@ public class DateUtil {
                 return true;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getStackTrace());
         }
 
         return false;

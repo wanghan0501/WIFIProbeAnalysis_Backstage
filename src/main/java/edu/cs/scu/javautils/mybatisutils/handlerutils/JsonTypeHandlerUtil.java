@@ -3,6 +3,7 @@ package edu.cs.scu.javautils.mybatisutils.handlerutils;
 import edu.cs.scu.javautils.JsonUtil;
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
+import org.apache.log4j.Logger;
 
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
@@ -22,24 +23,49 @@ import java.sql.SQLException;
 
 public class JsonTypeHandlerUtil extends BaseTypeHandler<Object> {
 
+    // 得到log记录器
+    private static final Logger logger = Logger.getLogger(JsonTypeHandlerUtil.class);
+
     @Override
     public Object getNullableResult(ResultSet rs, String columnName) throws SQLException {
-        return JsonUtil.parse(rs.getString(columnName), Object.class);
+        try {
+            return JsonUtil.parse(rs.getString(columnName), Object.class);
+        } catch (Exception e) {
+            logger.error(e.getStackTrace());
+        }
+
+        return null;
     }
 
     @Override
     public Object getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
-        return JsonUtil.parse(rs.getString(columnIndex), Object.class);
+        try {
+            return JsonUtil.parse(rs.getString(columnIndex), Object.class);
+        } catch (Exception e) {
+            logger.error(e.getStackTrace());
+        }
+
+        return null;
     }
 
     @Override
     public Object getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
+        try {
+            return JsonUtil.parse(cs.getString(columnIndex), Object.class);
+        } catch (Exception e) {
+            logger.error(e.getStackTrace());
+        }
 
-        return JsonUtil.parse(cs.getString(columnIndex), Object.class);
+        return null;
     }
 
     @Override
     public void setNonNullParameter(PreparedStatement ps, int i, Object parameter, JdbcType jdbcType) throws SQLException {
-        ps.setObject(i, JsonUtil.stringify(parameter));
+        try {
+            ps.setObject(i, JsonUtil.stringify(parameter));
+        } catch (Exception e) {
+            logger.error(e.getStackTrace());
+        }
+
     }
 }
