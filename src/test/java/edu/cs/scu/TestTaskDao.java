@@ -2,6 +2,7 @@ package edu.cs.scu;
 
 import edu.cs.scu.bean.TaskBean;
 import edu.cs.scu.dao.impl.TaskDaoImpl;
+import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +13,10 @@ import java.util.List;
  * Copyright © Wang Han. SCU. All Rights Reserved.
  */
 public class TestTaskDao {
+    private static Logger logger = Logger.getLogger(TestTaskDao.class);
+
     public static void main(String[] args) {
+
         TaskDaoImpl taskDaoImpl = new TaskDaoImpl();
         int count = taskDaoImpl.getTaskCount();
         System.out.println("----------");
@@ -28,9 +32,10 @@ public class TestTaskDao {
         taskBean = taskDaoImpl.getTaskById(1L);
         System.out.println("1L 的创建时间" + taskBean.getCreateTime());
         System.out.println("----------");
-        taskBean.setTaskId(3L);
+        taskBean.setTaskId(4L);
         taskDaoImpl.addTask(taskBean);
         System.out.println("----------");
         System.out.println("finished");
+        logger.info("hello");
     }
 }

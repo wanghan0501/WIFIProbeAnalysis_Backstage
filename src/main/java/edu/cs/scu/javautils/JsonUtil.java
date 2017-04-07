@@ -1,6 +1,7 @@
 package edu.cs.scu.javautils;
 
 import com.alibaba.fastjson.JSON;
+import org.apache.log4j.Logger;
 
 /**
  * json对象解析类
@@ -13,6 +14,9 @@ import com.alibaba.fastjson.JSON;
  */
 public class JsonUtil {
 
+    // 得到log记录器
+    private static final Logger logger = Logger.getLogger(JsonUtil.class);
+
     /**
      * 构造含有object属性的json字符串
      *
@@ -24,7 +28,7 @@ public class JsonUtil {
         try {
             return JSON.toJSONString(object);
         } catch (Exception e) {
-            System.err.println(e.getMessage());
+            logger.error(e.getStackTrace());
         }
 
         return null;
@@ -47,7 +51,7 @@ public class JsonUtil {
         try {
             return JSON.parseObject(json, clazz);
         } catch (Exception e) {
-            System.err.println(e.getMessage());
+            logger.error(e.getStackTrace());
         }
 
         return null;

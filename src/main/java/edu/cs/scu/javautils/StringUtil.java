@@ -1,5 +1,7 @@
 package edu.cs.scu.javautils;
 
+import org.apache.log4j.Logger;
+
 /**
  * 字符串工具类
  * <p>
@@ -10,6 +12,9 @@ package edu.cs.scu.javautils;
  * @author Wang Han
  */
 public class StringUtil {
+
+    // 得到log记录器
+    private static final Logger logger = Logger.getLogger(DateUtil.class);
 
     /**
      * 从字符串中提取指定的字段
@@ -33,7 +38,7 @@ public class StringUtil {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getStackTrace());
         }
 
         return null;
