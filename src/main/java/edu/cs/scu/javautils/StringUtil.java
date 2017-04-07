@@ -27,11 +27,11 @@ public class StringUtil {
     public static synchronized String getFieldFromConcatString(String str, String delimiter, String field) {
 
         try {
-            String[] fileds = str.split(delimiter);
-            for (String filed : fileds) {
-                if (filed.split("=").length == 2) {
-                    String fieldName = filed.split("=")[0];
-                    String fieldValue = filed.split("=")[1];
+            String[] fields = str.split(delimiter);
+            for (String currentField : fields) {
+                if (currentField.split("=").length == 2) {
+                    String fieldName = currentField.split("=")[0];
+                    String fieldValue = currentField.split("=")[1];
                     if (fieldName.equals(field)) {
                         return fieldValue;
                     }
