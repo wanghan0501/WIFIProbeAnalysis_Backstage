@@ -154,24 +154,6 @@
                 <version>1.10</version>
                 <executions>
                     <execution>
-                        <id>add-resource</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>add-resource</goal>
-                        </goals>
-                        <configuration>
-                            <resources>
-                                <resource>
-                                    <directiory>edu/cs/scu/mapper</directiory>
-                                    <includes>
-                                        <include>*.xml</include>
-                                    </includes>
-                                </resource>
-
-                            </resources>
-                        </configuration>
-                    </execution>
-                    <execution>
                         <id>add-source</id>
                         <phase>generate-sources</phase>
                         <goals>

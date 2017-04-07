@@ -21,6 +21,6 @@
         </environment>
     </environments>
     <mappers>
-        <mapper resource="src/main/java/edu/cs/scu/mapper.xml"/>
+        <mapper resource="edu/cs/scu/mapper/TaskDao.xml"/>
     </mappers>
 </configuration>
