@@ -24,15 +24,17 @@ public class TaskDaoImpl implements TaskDao {
 
     @Override
     public int getTaskCount() {
+        SqlSession sqlSession = MybatisSqlSession.getSqlSession();
         int count = 0;
+
         try {
-            TaskDao taskDao = MybatisSqlSession.getSqlSession().getMapper(TaskDao.class);
+            TaskDao taskDao = sqlSession.getMapper(TaskDao.class);
             count = taskDao.getTaskCount();
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getStackTrace());
         } finally {
-            MybatisSqlSession.getSqlSession().close();
+            sqlSession.close();
         }
 
         return count;
@@ -40,15 +42,17 @@ public class TaskDaoImpl implements TaskDao {
 
     @Override
     public List<TaskBean> getTaskInfo() {
+        SqlSession sqlSession = MybatisSqlSession.getSqlSession();
         List<TaskBean> taskBeanList = new ArrayList<>();
+
         try {
-            TaskDao taskDao = MybatisSqlSession.getSqlSession().getMapper(TaskDao.class);
+            TaskDao taskDao = sqlSession.getMapper(TaskDao.class);
             taskBeanList = taskDao.getTaskInfo();
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getStackTrace());
         } finally {
-            MybatisSqlSession.getSqlSession().close();
+            sqlSession.close();
         }
 
         return taskBeanList;
@@ -56,15 +60,17 @@ public class TaskDaoImpl implements TaskDao {
 
     @Override
     public TaskBean getTaskById(Long id) {
+        SqlSession sqlSession = MybatisSqlSession.getSqlSession();
         TaskBean taskBean = new TaskBean();
+
         try {
-            TaskDao taskDao = MybatisSqlSession.getSqlSession().getMapper(TaskDao.class);
+            TaskDao taskDao = sqlSession.getMapper(TaskDao.class);
             taskBean = taskDao.getTaskById(id);
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getStackTrace());
         } finally {
-            MybatisSqlSession.getSqlSession().close();
+            sqlSession.close();
         }
 
         return taskBean;
