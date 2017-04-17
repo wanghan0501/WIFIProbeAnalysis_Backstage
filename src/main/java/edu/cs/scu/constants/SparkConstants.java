@@ -1,7 +1,7 @@
 package edu.cs.scu.constants;
 
 /**
- * 常量接口类
+ * 与spark集群相关常量接口类
  * <p>
  * Created by Wang Han on 2017/3/29 14:40.
  * E-mail address is wanghan0501@vip.qq.com.
@@ -9,7 +9,7 @@ package edu.cs.scu.constants;
  *
  * @author Wang Han
  */
-public interface Constants {
+public interface SparkConstants {
     // 定义本地运行的线程数量
     String SPARK_MASTER = "local[2]";
     String SPARK_LOCAL = "spark.local";

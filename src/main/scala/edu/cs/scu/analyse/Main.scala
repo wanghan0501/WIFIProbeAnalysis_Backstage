@@ -1,5 +1,6 @@
 package edu.cs.scu.analyse
 
+import edu.cs.scu.javautils.DateUtil
 import edu.cs.scu.scalautils.InitUnits
 import org.apache.hadoop.hive.ql.exec.spark.session.SparkSession
 import org.apache.spark.SparkContext
@@ -22,28 +23,39 @@ object Main {
     val init: (SparkContext, SQLContext, StreamingContext) = InitUnits.initSparkContext()
     val sQLContext = init._2
     val streamingContext: StreamingContext = init._3
-    //    val dataStruct =
-    //      StructType(StructField("ds", StringType, true) ::
-    //        StructField("essid0", StringType, true) ::
-    //        StructField("essid1", StringType, true) ::
-    //        StructField("essid2", StringType, true) ::
-    //        StructField("essid3", StringType, true) ::
-    //        StructField("essid4", StringType, true) ::
-    //        StructField("essid5", StringType, true) ::
-    //        StructField("essid6", StringType, true) ::
-    //        StructField("mac", StringType, true) ::
-    //        StructField("range", StringType, true) ::
-    //        StructField("rssi", StringType, true) ::
-    //        StructField("tc", StringType, true) ::
-    //        StructField("tmc", StringType, true) ::
-    //        StructField("ts", StringType, true) :: Nil)
-    //
+
+    var lastTime: String = DateUtil.getToday
+
     val wifiProbeData = InitUnits.getDStream(streamingContext)
     wifiProbeData.foreachRDD(foreachFunc = rdd => {
       if (rdd.count() >= 1) {
         val df = sQLContext.read.json(rdd)
         df.printSchema()
         println(df.schema)
+        val dfRDD = df.map(t => {
+          val sta = t.getString(0)
+          val time = t.getString(1)
+
+          // 如果间隔超过10分钟，则写入数据库
+          if (DateUtil.intervalTenMin(lastTime, time)) {
+            lastTime = time
+
+          }
+
+          val dataType = t.getString(2)
+          val datas = t.getSeq(3).asInstanceOf[Seq[Row]]
+          val datasIterator = datas.iterator
+          while (datasIterator.hasNext) {
+            val currentData = datasIterator.next()
+            val rssiSeq = currentData.getSeq(0).asInstanceOf[Seq[Int]]
+            val rssi = rssiSeq.sum / rssiSeq.length
+            val brand = currentData.getLong(1)
+            val mac = currentData.getString(2)
+          }
+
+          (sta, time, dataType, datasIterator)
+        })
+
         val data = df.select("data").flatMap(t => {
           val a = t.getSeq(0).asInstanceOf[Seq[Row]]
           a.iterator

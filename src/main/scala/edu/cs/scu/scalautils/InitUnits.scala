@@ -1,7 +1,7 @@
 package edu.cs.scu.scalautils
 
 import edu.cs.scu.conf.ConfigurationManager
-import edu.cs.scu.constants.Constants
+import edu.cs.scu.constants.SparkConstants
 import org.apache.log4j.{Level, Logger}
 import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.sql.SQLContext
@@ -47,11 +47,11 @@ object InitUnits {
     * @return
     */
   def getSparkConf: SparkConf = {
-    val local = ConfigurationManager.getBoolean(Constants.SPARK_LOCAL)
+    val local = ConfigurationManager.getBoolean(SparkConstants.SPARK_LOCAL)
     if (local)
-      new SparkConf().setAppName(Constants.SPARK_APP_NAME).setMaster(Constants.SPARK_MASTER)
+      new SparkConf().setAppName(SparkConstants.SPARK_APP_NAME).setMaster(SparkConstants.SPARK_MASTER)
     else
-      new SparkConf().setAppName(Constants.SPARK_APP_NAME)
+      new SparkConf().setAppName(SparkConstants.SPARK_APP_NAME)
   }
 
   /**
@@ -61,7 +61,7 @@ object InitUnits {
     * @return
     */
   def getSQLContext(sc: SparkContext): SQLContext = {
-    val local = ConfigurationManager.getBoolean(Constants.SPARK_LOCAL)
+    val local = ConfigurationManager.getBoolean(SparkConstants.SPARK_LOCAL)
     if (local)
       new SQLContext(sc)
     else
@@ -75,12 +75,12 @@ object InitUnits {
     * @return
     */
   def getStreamingContext(sparkContext: SparkContext): StreamingContext = {
-    val local = ConfigurationManager.getBoolean(Constants.SPARK_LOCAL)
+    val local = ConfigurationManager.getBoolean(SparkConstants.SPARK_LOCAL)
     if (local) {
 
     }
 
-    new StreamingContext(sparkContext, Seconds(ConfigurationManager.getLong(Constants.SPARK_STREAMING_COLLECT_TIME)))
+    new StreamingContext(sparkContext, Seconds(ConfigurationManager.getLong(SparkConstants.SPARK_STREAMING_COLLECT_TIME)))
   }
 
 
@@ -91,12 +91,12 @@ object InitUnits {
     * @return
     */
   def getDStream(streamingContext: StreamingContext): DStream[String] = {
-    if (ConfigurationManager.getBoolean(Constants.SPARK_LOCAL)) {
-      //streamingContext.checkpoint(ConfigurationManager.getString(Constants.SPARK_LOCAL_CHECK_POINT_DIR))
-      streamingContext.textFileStream(ConfigurationManager.getString(Constants.SPARK_LOCAL_DATA_SOURCE))
+    if (ConfigurationManager.getBoolean(SparkConstants.SPARK_LOCAL)) {
+      //streamingContext.checkpoint(ConfigurationManager.getString(SparkConstants.SPARK_LOCAL_CHECK_POINT_DIR))
+      streamingContext.textFileStream(ConfigurationManager.getString(SparkConstants.SPARK_LOCAL_DATA_SOURCE))
     } else {
-      //streamingContext.checkpoint(ConfigurationManager.getString(Constants.SPARK_CHECK_POINT_DIR))
-      streamingContext.textFileStream(ConfigurationManager.getString(Constants.SPARK_DATA_SOURCE))
+      //streamingContext.checkpoint(ConfigurationManager.getString(SparkConstants.SPARK_CHECK_POINT_DIR))
+      streamingContext.textFileStream(ConfigurationManager.getString(SparkConstants.SPARK_DATA_SOURCE))
     }
   }
 }
