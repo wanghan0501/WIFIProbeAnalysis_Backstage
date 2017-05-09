@@ -145,7 +145,7 @@ public class DateUtil {
     }
 
     /**
-     * 判断一个时间是否在另一个时间之后
+     * 判断一个时间是否在另一个时间之后10分钟
      *
      * @param time1 第一个时间
      * @param time2 第二个时间
@@ -153,8 +153,8 @@ public class DateUtil {
      */
     public static boolean intervalTenMin(String time1, String time2) {
         try {
-            Date dateTime1 = COMPRESSION_TIME_FORMAT.parse(time1);
-            Date dateTime2 = COMPRESSION_TIME_FORMAT.parse(time2);
+            Date dateTime1 = TIME_FORMAT.parse(time1);
+            Date dateTime2 = TIME_FORMAT.parse(time2);
 
             if (dateTime2.getTime() - dateTime1.getTime() >= DateConstants.TIME_PERIOD_VALUE_10m) {
                 return true;
@@ -167,5 +167,27 @@ public class DateUtil {
         return false;
     }
 
+    /**
+     * 判断一个时间是否在另一个时间之后1分钟
+     *
+     * @param time1 第一个时间
+     * @param time2 第二个时间
+     * @return 判断结果
+     */
+    public static boolean intervalOneMin(String time1, String time2) {
+        try {
+            Date dateTime1 = TIME_FORMAT.parse(time1);
+            Date dateTime2 = TIME_FORMAT.parse(time2);
+
+            if (dateTime2.getTime() - dateTime1.getTime() >= DateConstants.TIME_PERIOD_VALUE_1m) {
+                return true;
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            System.err.println(e.getMessage());
+        }
+
+        return false;
+    }
 }
 
