@@ -8,6 +8,7 @@ package edu.cs.scu.bean;
 public class PropertyBean {
     private long propertyId;
     private String visitCycle;
+    private long visitRange;
     private String activityDegree;
     private String visitTimeSplit;
     private String propertyType;
@@ -30,6 +31,14 @@ public class PropertyBean {
 
     public void setVisitCycle(String visitCycle) {
         this.visitCycle = visitCycle;
+    }
+
+    public long getVisitRange() {
+        return visitRange;
+    }
+
+    public void setVisitRange(long visitRange) {
+        this.visitRange = visitRange;
     }
 
     public String getActivityDegree() {

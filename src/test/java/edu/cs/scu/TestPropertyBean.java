@@ -8,11 +8,16 @@ import edu.cs.scu.dao.impl.PropertyDaoImpl;
  * E-mail address is wanghan0501@vip.qq.com.
  * Copyright © 2017 Wang Han. SCU. All Rights Reserved.
  */
-public class testPropertyBean {
+public class TestPropertyBean {
     public static void main(String args[]) {
         PropertyDaoImpl propertyDao = new PropertyDaoImpl();
-        PropertyBean propertyBean = new PropertyBean();
+        PropertyBean propertyBean;
         propertyBean = propertyDao.getPropertyById(1L);
+        System.out.println(propertyBean.getPropertyId());
+        System.out.println(propertyBean.getActivityDegree());
+        System.out.println(propertyBean.getPropertyType());
+        System.out.println(propertyBean.getVisitCycle());
         System.out.println(propertyBean.getVisitTimeSplit());
+        System.out.println(propertyBean.getVisitRange());
     }
 }

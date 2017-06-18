@@ -7,7 +7,7 @@ import edu.cs.scu.javautils.DateUtil;
  * E-mail address is wanghan0501@vip.qq.com.
  * Copyright © 2017 Wang Han. SCU. All Rights Reserved.
  */
-public class testDate {
+public class TestDate {
 
     public static void main(String args[]) throws Exception{
 
