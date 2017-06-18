@@ -1,10 +1,12 @@
 package edu.cs.scu.analyse
 
+import java.text.SimpleDateFormat
+
+import edu.cs.scu.bean.UserVisitBean
+import edu.cs.scu.dao.impl.UserVisitDaoImpl
 import edu.cs.scu.javautils.DateUtil
 import edu.cs.scu.scalautils.InitUnits
-import org.apache.hadoop.hive.ql.exec.spark.session.SparkSession
 import org.apache.spark.SparkContext
-import org.apache.spark.sql.types.{StringType, StructField, StructType}
 import org.apache.spark.sql.{Row, SQLContext}
 import org.apache.spark.streaming.StreamingContext
 
@@ -47,31 +49,40 @@ object Main {
 //              StructField("ts", StringType, true) :: Nil)
 
       if (rdd.count() >= 1) {
-        val dataFrameReader = sQLContext.read
-        val df = dataFrameReader.json(rdd)
+        val df = sQLContext.read.json(rdd)
         df.printSchema()
-        println(df.schema)
-        val dfRDD = df.map(t => {
-          val id = t.getString(0)
-          val mmac = t.getString(1)
-          val rate = t.getString(2)
-          val wssid = t.getString(3)
-          val time = t.getString(4)
-
-          // 如果间隔超过1分钟，则写入数据库
-          if (DateUtil.intervalOneMin(lastTime, time)) {
-            lastTime = time
-          }
-
-          val datas = t.getSeq(5).asInstanceOf[Seq[Row]]
+        val dfRDD = df.foreach(t => {
+          val datas = t.getSeq(0).asInstanceOf[Seq[Row]]
           val datasIterator = datas.iterator
+          var macCount=0
           while (datasIterator.hasNext) {
             val currentData = datasIterator.next()
             val mac = currentData.getString(0)
-            val rssi = currentData.getString(1)
-            val range = currentData.getFloat(2)
+            macCount=macCount+1
+            val range = currentData.getString(1)
+            val rssi = currentData.getString(2)
           }
-        })
+          val id = t.getString(1)
+          val mmac = t.getString(2)
+          val rate = t.getString(3)
+          val time = DateUtil.parseTime(t.getString(4))
+          val wmac = t.getString(5)
+          val wssid = t.getString(6)
+
+          val userVisitDaoIml= new UserVisitDaoImpl
+          val userVisit=new UserVisitBean
+          userVisit.setShopId(1L)
+          userVisit.setMac(mmac)
+          userVisit.setTime(time)
+          userVisit.setTotalFlow(macCount)
+          userVisitDaoIml.addUserVisit(userVisit)
+          println("insert finished")
+          // 如果间隔超过1分钟，则写入数据库
+//          if (DateUtil.intervalOneMin(lastTime, time)) {
+//            lastTime = time
+//          }
+        }
+        )
       }
     }
     )

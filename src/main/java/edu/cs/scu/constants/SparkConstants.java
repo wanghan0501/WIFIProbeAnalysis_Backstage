@@ -15,6 +15,8 @@ public interface SparkConstants {
     String SPARK_LOCAL = "spark.local";
     // 定义本地源数据目录
     String SPARK_LOCAL_DATA_SOURCE="spark.local.data.source";
+    // 定义本地socket源端口
+    String SPARK_LOCAL_SOCKET_PORT="spark.local.socket.port";
     // 定义本地检查点目录
     String SPARK_LOCAL_CHECK_POINT_DIR = "spark.local.check.point.dir";
     // 定义任务名称

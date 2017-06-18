@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * 日期工具类
@@ -21,9 +22,8 @@ public class DateUtil {
 
     // 得到log记录器
     private static final Logger logger = Logger.getLogger(DateUtil.class);
+    private static final SimpleDateFormat ENGLISH_TIME_FORMAT = new SimpleDateFormat("EEE MMM d HH:mm:ss yyyy", Locale.ENGLISH);
     private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
-    private static final SimpleDateFormat COMPRESSION_TIME_FORMAT = new SimpleDateFormat("yyyyMMddHHmmss");
 
     /**
      * 获取现在时间（yyyy-MM-dd HH:mm:ss）
@@ -31,7 +31,7 @@ public class DateUtil {
      * @return 此刻时间
      */
     public static synchronized String getToday() {
-        return COMPRESSION_TIME_FORMAT.format(new Date());
+        return TIME_FORMAT.format(new Date());
     }
 
     /**
@@ -40,26 +40,9 @@ public class DateUtil {
      * @param time 时间字符串
      * @return Date
      */
-    public static synchronized Date parseTime(String time) {
+    public static synchronized String parseTime(String time) {
         try {
-            return TIME_FORMAT.parse(time);
-        } catch (ParseException e) {
-            logger.error(e.getStackTrace());
-            System.err.println(e.getStackTrace());
-        }
-
-        return null;
-    }
-
-    /**
-     * 解析时间字符串
-     *
-     * @param time 时间字符串
-     * @return Date
-     */
-    public static synchronized Date parseCompressionTime(String time) {
-        try {
-            return COMPRESSION_TIME_FORMAT.parse(time);
+            return TIME_FORMAT.format(ENGLISH_TIME_FORMAT.parse(time));
         } catch (ParseException e) {
             logger.error(e.getStackTrace());
             System.err.println(e.getStackTrace());
@@ -75,26 +58,10 @@ public class DateUtil {
      * @param time2 第二个时间
      * @return 判断结果
      */
-    public static synchronized boolean before(String time1, String time2, String type) {
+    public static synchronized boolean before(String time1, String time2) {
         try {
-            Date dateTime1 = null;
-            Date dateTime2 = null;
-            switch (type) {
-                case "TIME_FORMAT":
-                    dateTime1 = TIME_FORMAT.parse(time1);
-                    dateTime2 = TIME_FORMAT.parse(time2);
-                    break;
-                case "DATE_FORMAT":
-                    dateTime1 = DATE_FORMAT.parse(time1);
-                    dateTime2 = DATE_FORMAT.parse(time2);
-                    break;
-                case "COMPRESSION_TIME_FORMAT":
-                    dateTime1 = COMPRESSION_TIME_FORMAT.parse(time1);
-                    dateTime2 = COMPRESSION_TIME_FORMAT.parse(time2);
-                    break;
-                default:
-                    break;
-            }
+            Date dateTime1 = TIME_FORMAT.parse(time1);
+            Date dateTime2 = TIME_FORMAT.parse(time2);
             if (dateTime1.before(dateTime2)) {
                 return true;
             }
@@ -113,26 +80,10 @@ public class DateUtil {
      * @param time2 第二个时间
      * @return 判断结果
      */
-    public static synchronized boolean after(String time1, String time2, String type) {
+    public static synchronized boolean after(String time1, String time2) {
         try {
-            Date dateTime1 = null;
-            Date dateTime2 = null;
-            switch (type) {
-                case "TIME_FORMAT":
-                    dateTime1 = TIME_FORMAT.parse(time1);
-                    dateTime2 = TIME_FORMAT.parse(time2);
-                    break;
-                case "DATE_FORMAT":
-                    dateTime1 = DATE_FORMAT.parse(time1);
-                    dateTime2 = DATE_FORMAT.parse(time2);
-                    break;
-                case "COMPRESSION_TIME_FORMAT":
-                    dateTime1 = COMPRESSION_TIME_FORMAT.parse(time1);
-                    dateTime2 = COMPRESSION_TIME_FORMAT.parse(time2);
-                    break;
-                default:
-                    break;
-            }
+            Date dateTime1 = TIME_FORMAT.parse(time1);
+            Date dateTime2 = TIME_FORMAT.parse(time2);
             if (dateTime1.after(dateTime2)) {
                 return true;
             }
