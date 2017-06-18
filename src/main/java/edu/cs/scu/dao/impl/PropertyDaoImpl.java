@@ -16,13 +16,30 @@ public class PropertyDaoImpl implements PropertyDao {
     private static final Logger logger = Logger.getLogger(PropertyDaoImpl.class);
 
     @Override
-    public PropertyBean getPropertyById(long id) {
+    public PropertyBean getPropertyById(int id) {
         SqlSession sqlSession = MybatisSqlSession.getSqlSession();
         PropertyBean propertyBean = new PropertyBean();
 
         try {
             PropertyDao propertyDao = sqlSession.getMapper(PropertyDao.class);
             propertyBean = propertyDao.getPropertyById(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getStackTrace());
+        } finally {
+            sqlSession.close();
+        }
+
+        return propertyBean;
+    }
+
+    @Override
+    public PropertyBean getNewProperty() {
+        SqlSession sqlSession = MybatisSqlSession.getSqlSession();
+        PropertyBean propertyBean = new PropertyBean();
+        try {
+            PropertyDao propertyDao = sqlSession.getMapper(PropertyDao.class);
+            propertyBean = propertyDao.getNewProperty();
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getStackTrace());

@@ -12,7 +12,7 @@ public class TestPropertyBean {
     public static void main(String args[]) {
         PropertyDaoImpl propertyDao = new PropertyDaoImpl();
         PropertyBean propertyBean;
-        propertyBean = propertyDao.getPropertyById(1L);
+        propertyBean = propertyDao.getNewProperty();
         System.out.println(propertyBean.getPropertyId());
         System.out.println(propertyBean.getActivityDegree());
         System.out.println(propertyBean.getPropertyType());

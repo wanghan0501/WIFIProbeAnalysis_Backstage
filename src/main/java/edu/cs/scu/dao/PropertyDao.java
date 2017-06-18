@@ -8,5 +8,8 @@ import edu.cs.scu.bean.PropertyBean;
  * Copyright © 2017 Wang Han. SCU. All Rights Reserved.
  */
 public interface PropertyDao {
-    public PropertyBean getPropertyById(long id);
+    public PropertyBean getPropertyById(int id);
+
+    // 从数据库中拉去最新配置数据，即最后一条数据
+    public PropertyBean getNewProperty();
 }

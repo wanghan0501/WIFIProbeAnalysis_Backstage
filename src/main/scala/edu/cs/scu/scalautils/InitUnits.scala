@@ -1,7 +1,9 @@
 package edu.cs.scu.scalautils
 
+import edu.cs.scu.bean.PropertyBean
 import edu.cs.scu.conf.ConfigurationManager
 import edu.cs.scu.constants.SparkConstants
+import edu.cs.scu.dao.impl.PropertyDaoImpl
 import org.apache.log4j.{Level, Logger}
 import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.sql.SQLContext
@@ -101,7 +103,14 @@ object InitUnits {
     }
   }
 
-  def getPropertyFromDatabase()={
-
+  /**
+    * 从数据中加载配置项
+    *
+    * @return
+    */
+  def getPropertyFromDatabase():PropertyBean={
+    val propertyDao = new PropertyDaoImpl
+    val propertyBean = propertyDao.getNewProperty
+    propertyBean
   }
 }

@@ -1,5 +1,7 @@
 package edu.cs.scu.bean;
 
+import java.io.Serializable;
+
 /**
  * 用户访问类
  * <p>
@@ -7,18 +9,24 @@ package edu.cs.scu.bean;
  * E-mail address is wanghan0501@vip.qq.com.
  * Copyright © 2017 Wang Han. SCU. All Rights Reserved.
  */
-public class UserVisitBean {
+public class UserVisitBean implements Serializable{
+    private static final long serialVersinUID = 351877796426921776L;
+
     private long shopId;
     private String mac;
     private String time;
     private long totalFlow;
     private long checkInFlow;
-    private long checkInRate;
-    private long shallowVisitRate;
-    private long deepVisitRate;
+    private double checkInRate;
+    private double shallowVisitRate;
+    private double deepVisitRate;
 
     public UserVisitBean() {
 
+    }
+
+    public static long getSerialVersinUID() {
+        return serialVersinUID;
     }
 
     public long getShopId() {
@@ -61,7 +69,7 @@ public class UserVisitBean {
         this.checkInFlow = checkInFlow;
     }
 
-    public long getCheckInRate() {
+    public double getCheckInRate() {
         return checkInRate;
     }
 
@@ -69,7 +77,7 @@ public class UserVisitBean {
         this.checkInRate = checkInRate;
     }
 
-    public long getShallowVisitRate() {
+    public double getShallowVisitRate() {
         return shallowVisitRate;
     }
 
@@ -77,7 +85,7 @@ public class UserVisitBean {
         this.shallowVisitRate = shallowVisitRate;
     }
 
-    public long getDeepVisitRate() {
+    public double getDeepVisitRate() {
         return deepVisitRate;
     }
 

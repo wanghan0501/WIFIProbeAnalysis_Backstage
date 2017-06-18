@@ -5,6 +5,7 @@
         <result column="property_id" property="propertyId"/>
         <result column="visit_cycle" property="visitCycle"/>
         <result column="visit_range" property="visitRange"/>
+        <result column="visit_rssi" property="visitRSSI"/>
         <result column="activity_degree" property="activityDegree"/>
         <result column="visit_time_split" property="visitTimeSplit"/>
         <result column="property_type" property="propertyType"/>
@@ -13,7 +14,8 @@
     <parameterMap id="TaskParameterMap" type="PropertyBean">
         <parameter property="propertyId" jdbcType="INTEGER" resultMap="TaskResultMap"/>
         <parameter property="visitCycle" jdbcType="VARCHAR" resultMap="TaskResultMap"/>
-        <parameter property="visitRange" jdbcType="INTEGER" resultMap="TaskResultMap"/>
+        <parameter property="visitRange" jdbcType="DOUBLE" resultMap="TaskResultMap"/>
+        <parameter property="visitRSSI" jdbcType="INTEGER" resultMap="TaskResultMap"/>
         <parameter property="activityDegree" jdbcType="VARCHAR" resultMap="TaskResultMap"/>
         <parameter property="visitTimeSplit" jdbcType="VARCHAR" resultMap="TaskResultMap"/>
         <parameter property="propertyType" jdbcType="INTEGER" resultMap="TaskResultMap"/>
@@ -21,8 +23,17 @@
 
     <select id="getPropertyById" resultMap="TaskResultMap">
         SELECT *
-        FROM property
+        FROM  property
         WHERE property_id = #{0}
+    </select>
+
+    <select id="getNewProperty" resultMap="TaskResultMap">
+        SELECT *
+        FROM property a
+        WHERE a.property_id in (
+        SELECT max(b.property_id)
+        FROM property b
+        )
     </select>
 
 </mapper>

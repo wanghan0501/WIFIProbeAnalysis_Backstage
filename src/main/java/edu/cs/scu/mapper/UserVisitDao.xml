@@ -21,9 +21,9 @@
         <parameter property="time" jdbcType="VARCHAR" resultMap="TaskResultMap"/>
         <parameter property="totalFlow" jdbcType="INTEGER" resultMap="TaskResultMap"/>
         <parameter property="checkInFlow" jdbcType="INTEGER" resultMap="TaskResultMap"/>
-        <parameter property="checkInRate" jdbcType="INTEGER" resultMap="TaskResultMap"/>
-        <parameter property="shallowVisitRate" jdbcType="INTEGER" resultMap="TaskResultMap"/>
-        <parameter property="deepVisitRate" jdbcType="INTEGER" resultMap="TaskResultMap"/>
+        <parameter property="checkInRate" jdbcType="DOUBLE" resultMap="TaskResultMap"/>
+        <parameter property="shallowVisitRate" jdbcType="DOUBLE" resultMap="TaskResultMap"/>
+        <parameter property="deepVisitRate" jdbcType="DOUBLE" resultMap="TaskResultMap"/>
     </parameterMap>
 
     <insert id="addUserVisit" parameterMap="TaskParameterMap">
