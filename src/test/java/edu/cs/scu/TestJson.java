@@ -13,10 +13,10 @@ public class TestJson {
     public static void main(String[] args) {
         JSONObject jsonObject = JSON.parseObject("{\"sta\":\"5ccf7f07ce5a\",\"time\":\"20160604123043\",\"type\":\"probe\",\"data\":[{\"brand\":\"14200\", \"mac\":\"28c2dd2918d1\",\"rssi\":[\"32\",\"30\"]},{\"brand\":\"18452\",\"mac\":\"a4d1d25edf4e\",\"rssi\":[\"93\",\"93\"]}]}");
         System.out.println(jsonObject.getString("sta"));
-        System.out.println(DateUtil.parseCompressionTime(jsonObject.getString("time")));
+        System.out.println(DateUtil.parseTime(jsonObject.getString("time")));
         System.out.println(jsonObject.getString("type"));
         System.out.println(jsonObject.getJSONArray("data"));
-        System.out.println(DateUtil.before("20160604123043", "20160704123043", "COMPRESSION_TIME_FORMAT"));
+        System.out.println(DateUtil.before("20160604123043", "20160704123043"));
 
         Runnable r = new Runnable1();
 

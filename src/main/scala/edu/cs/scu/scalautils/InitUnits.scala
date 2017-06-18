@@ -100,4 +100,8 @@ object InitUnits {
       streamingContext.textFileStream(ConfigurationManager.getString(SparkConstants.SPARK_DATA_SOURCE))
     }
   }
+
+  def getPropertyFromDatabase()={
+
+  }
 }

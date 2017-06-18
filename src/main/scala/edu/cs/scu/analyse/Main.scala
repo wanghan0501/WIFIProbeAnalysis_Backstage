@@ -1,7 +1,5 @@
 package edu.cs.scu.analyse
 
-import java.text.SimpleDateFormat
-
 import edu.cs.scu.bean.UserVisitBean
 import edu.cs.scu.dao.impl.UserVisitDaoImpl
 import edu.cs.scu.javautils.DateUtil
@@ -31,22 +29,6 @@ object Main {
 
     val wifiProbeData = InitUnits.getDStream(streamingContext)
     wifiProbeData.foreachRDD(foreachFunc = rdd => {
-//          val dataStruct =
-//            StructType(
-//              StructField("id",StringType,true)::
-//              StructField("essid0", StringType, true) ::
-//              StructField("essid1", StringType, true) ::
-//              StructField("essid2", StringType, true) ::
-//              StructField("essid3", StringType, true) ::
-//              StructField("essid4", StringType, true) ::
-//              StructField("essid5", StringType, true) ::
-//              StructField("essid6", StringType, true) ::
-//              StructField("mac", StringType, true) ::
-//              StructField("range", StringType, true) ::
-//              StructField("rssi", StringType, true) ::
-//              StructField("tc", StringType, true) ::
-//              StructField("tmc", StringType, true) ::
-//              StructField("ts", StringType, true) :: Nil)
 
       if (rdd.count() >= 1) {
         val df = sQLContext.read.json(rdd)
