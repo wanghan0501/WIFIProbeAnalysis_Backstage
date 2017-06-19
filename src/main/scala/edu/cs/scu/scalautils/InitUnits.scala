@@ -108,7 +108,7 @@ object InitUnits {
     *
     * @return
     */
-  def getPropertyFromDatabase():PropertyBean={
+  def getPropertyFromDatabase(): PropertyBean = {
     val propertyDao = new PropertyDaoImpl
     val propertyBean = propertyDao.getNewProperty
     propertyBean

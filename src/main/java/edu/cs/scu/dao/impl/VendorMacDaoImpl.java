@@ -6,6 +6,8 @@ import edu.cs.scu.dao.VendorMacDao;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.log4j.Logger;
 
+import java.util.List;
+
 /**
  * Created by Wang Han on 2017/6/19 16:44.
  * E-mail address is wanghan0501@vip.qq.com.
@@ -24,6 +26,22 @@ public class VendorMacDaoImpl implements VendorMacDao {
         try {
             VendorMacDao vendorMacDao = sqlSession.getMapper(VendorMacDao.class);
             vendorMacDao.addVendorMac(vendorMacBean);
+            sqlSession.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getStackTrace());
+        } finally {
+            sqlSession.close();
+        }
+    }
+
+    @Override
+    public void addVendorMacBatch(List<VendorMacBean> vendorMacBeanList) {
+        SqlSession sqlSession = MybatisSqlSession.getSqlSession();
+
+        try {
+            VendorMacDao vendorMacDao = sqlSession.getMapper(VendorMacDao.class);
+            vendorMacDao.addVendorMacBatch(vendorMacBeanList);
             sqlSession.commit();
         } catch (Exception e) {
             e.printStackTrace();

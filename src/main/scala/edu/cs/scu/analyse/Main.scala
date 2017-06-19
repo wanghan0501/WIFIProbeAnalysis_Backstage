@@ -2,7 +2,7 @@ package edu.cs.scu.analyse
 
 import edu.cs.scu.bean.{PropertyBean, UserBean, UserVisitBean}
 import edu.cs.scu.dao.impl.{UserDaoImpl, UserVisitDaoImpl}
-import edu.cs.scu.javautils.DateUtil
+import edu.cs.scu.javautils.{DateUtil, MacUtil}
 import edu.cs.scu.scalautils.InitUnits
 import org.apache.spark.SparkContext
 import org.apache.spark.sql.{Row, SQLContext}
@@ -60,6 +60,7 @@ object Main {
             val userDaoImpl = new UserDaoImpl
             val userBean = new UserBean
             userBean.setMac(mac)
+            userBean.setBrand(MacUtil.getBrandByMac(mac))
             userDaoImpl.addUser(userBean)
           }
           // 进店率
