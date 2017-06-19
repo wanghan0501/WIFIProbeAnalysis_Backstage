@@ -1,7 +1,7 @@
 package edu.cs.scu.analyse
 
-import edu.cs.scu.bean.{PropertyBean, UserVisitBean}
-import edu.cs.scu.dao.impl.UserVisitDaoImpl
+import edu.cs.scu.bean.{PropertyBean, UserBean, UserVisitBean}
+import edu.cs.scu.dao.impl.{UserDaoImpl, UserVisitDaoImpl}
 import edu.cs.scu.javautils.DateUtil
 import edu.cs.scu.scalautils.InitUnits
 import org.apache.spark.SparkContext
@@ -29,14 +29,14 @@ object Main {
     // 配置属性
     val property: PropertyBean = InitUnits.getPropertyFromDatabase()
 
-    var lastTime: String = DateUtil.getToday
-
     // 数据
     val wifiProbeData = InitUnits.getDStream(streamingContext)
     wifiProbeData.foreachRDD(foreachFunc = rdd => {
-
+      // 如果当前窗口记录不为空
       if (rdd.count() >= 1) {
+        // 读取格式化json
         val df = sQLContext.read.json(rdd)
+        // 打印表结构
         df.printSchema()
         val dfRDD = df.foreach(t => {
           val datas = t.getSeq(0).asInstanceOf[Seq[Row]]
@@ -55,6 +55,12 @@ object Main {
               checkInFlow = checkInFlow + 1
             }
             val rssi = currentData.getString(2)
+
+            // 插入用户数据
+            val userDaoImpl = new UserDaoImpl
+            val userBean = new UserBean
+            userBean.setMac(mac)
+            userDaoImpl.addUser(userBean)
           }
           // 进店率
           val checkInRate = checkInFlow/checkInFlow
@@ -66,10 +72,11 @@ object Main {
           val wmac = t.getString(5)
           val wssid = t.getString(6)
 
+          // 添加用户相关信息
           val userVisitDaoIml = new UserVisitDaoImpl
           val userVisit = new UserVisitBean
           userVisit.setShopId(1L)
-          userVisit.setMac(mmac)
+          userVisit.setMmac(mmac)
           userVisit.setTime(time)
           userVisit.setTotalFlow(totalFlow)
           userVisit.setCheckInFlow(checkInFlow)

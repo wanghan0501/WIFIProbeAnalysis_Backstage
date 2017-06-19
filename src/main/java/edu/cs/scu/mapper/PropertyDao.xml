@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="edu.cs.scu.dao.PropertyDao">
-    <resultMap id="TaskResultMap" type="PropertyBean">
+    <resultMap id="PropertyResultMap" type="PropertyBean">
         <result column="property_id" property="propertyId"/>
         <result column="visit_cycle" property="visitCycle"/>
         <result column="visit_range" property="visitRange"/>
@@ -11,23 +11,23 @@
         <result column="property_type" property="propertyType"/>
     </resultMap>
 
-    <parameterMap id="TaskParameterMap" type="PropertyBean">
-        <parameter property="propertyId" jdbcType="INTEGER" resultMap="TaskResultMap"/>
-        <parameter property="visitCycle" jdbcType="VARCHAR" resultMap="TaskResultMap"/>
-        <parameter property="visitRange" jdbcType="DOUBLE" resultMap="TaskResultMap"/>
-        <parameter property="visitRSSI" jdbcType="INTEGER" resultMap="TaskResultMap"/>
-        <parameter property="activityDegree" jdbcType="VARCHAR" resultMap="TaskResultMap"/>
-        <parameter property="visitTimeSplit" jdbcType="VARCHAR" resultMap="TaskResultMap"/>
-        <parameter property="propertyType" jdbcType="INTEGER" resultMap="TaskResultMap"/>
+    <parameterMap id="PropertyParameterMap" type="PropertyBean">
+        <parameter property="propertyId" jdbcType="INTEGER" resultMap="PropertyResultMap"/>
+        <parameter property="visitCycle" jdbcType="VARCHAR" resultMap="PropertyResultMap"/>
+        <parameter property="visitRange" jdbcType="DOUBLE" resultMap="PropertyResultMap"/>
+        <parameter property="visitRSSI" jdbcType="INTEGER" resultMap="PropertyResultMap"/>
+        <parameter property="activityDegree" jdbcType="VARCHAR" resultMap="PropertyResultMap"/>
+        <parameter property="visitTimeSplit" jdbcType="VARCHAR" resultMap="PropertyResultMap"/>
+        <parameter property="propertyType" jdbcType="INTEGER" resultMap="PropertyResultMap"/>
     </parameterMap>
 
-    <select id="getPropertyById" resultMap="TaskResultMap">
+    <select id="getPropertyById" resultMap="PropertyResultMap">
         SELECT *
         FROM  property
         WHERE property_id = #{0}
     </select>
 
-    <select id="getNewProperty" resultMap="TaskResultMap">
+    <select id="getNewProperty" resultMap="PropertyResultMap">
         SELECT *
         FROM property a
         WHERE a.property_id in (
