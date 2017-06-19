@@ -6,7 +6,7 @@
         <result column="brand" property="brand"/>
         <result column="first_visit_time" property="firstVisitTime"/>
         <result column="last_visit_time" property="lastVisitTime"/>
-        <result column="new_ visit_time" property="newVisitTime"/>
+        <result column="new_visit_time" property="newVisitTime"/>
         <result column="activity_degree" property="activityDegree"/>
     </resultMap>
 
@@ -21,7 +21,7 @@
 
     <insert id="addUser" parameterMap="UserParameterMap">
         INSERT INTO user(
-        mac, brand, first_visit_time, last_visit_time, new_ visit_time, activity_degree
+        mac, brand, first_visit_time, last_visit_time, new_visit_time, activity_degree
         ) VALUES (#{mac},#{brand},#{firstVisitTime},#{lastVisitTime},#{newVisitTime},#{activityDegree})
     </insert>
 
@@ -30,7 +30,7 @@
     </update>
 
     <update id="updateUserNowVisitTImeByMac">
-        UPDATE user SET new_ visit_time = #{nowVisitTime} WHERE mac = #{mac}
+        UPDATE user SET new_visit_time = #{nowVisitTime} WHERE mac = #{mac}
     </update>
 
     <update id="updateUserActivityDegreeByMac">
