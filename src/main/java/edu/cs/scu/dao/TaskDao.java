@@ -16,13 +16,13 @@ import java.util.List;
  */
 public interface TaskDao {
     //查询总数
-    public int getTaskCount();
+    int getTaskCount();
 
     // 查询所有任务信息
-    public List<TaskBean> getTaskInfo();
+    List<TaskBean> getTaskInfo();
 
     //根据条件查询用户信息
-    public TaskBean getTaskById(Long id);
+    TaskBean getTaskById(Long id);
 
-    public void addTask(TaskBean taskBean);
+    void addTask(TaskBean taskBean);
 }

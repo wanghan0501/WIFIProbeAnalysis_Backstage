@@ -9,6 +9,8 @@
         <typeAlias type="edu.cs.scu.bean.TaskBean" alias="taskBean"/>
         <typeAlias type="edu.cs.scu.bean.UserVisitBean" alias="userVisitBean"/>
         <typeAlias type="edu.cs.scu.bean.PropertyBean" alias="PropertyBean"/>
+        <typeAlias type="edu.cs.scu.bean.UserBean" alias="UserBean"/>
+        <typeAlias type="edu.cs.scu.bean.ShopBean" alias="ShopBean"/>
     </typeAliases>
 
     <environments default="development">
@@ -29,5 +31,7 @@
         <mapper resource="edu/cs/scu/mapper/TaskDao.xml"/>
         <mapper resource="edu/cs/scu/mapper/UserVisitDao.xml"/>
         <mapper resource="edu/cs/scu/mapper/PropertyDao.xml"/>
+        <mapper resource="edu/cs/scu/mapper/UserDao.xml"/>
+        <mapper resource="edu/cs/scu/mapper/ShopDao.xml"/>
     </mappers>
 </configuration>

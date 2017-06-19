@@ -8,5 +8,5 @@ import edu.cs.scu.bean.UserVisitBean;
  * Copyright © 2017 Wang Han. SCU. All Rights Reserved.
  */
 public interface UserVisitDao {
-    public void addUserVisit(UserVisitBean userVisitBean);
+    void addUserVisit(UserVisitBean userVisitBean);
 }

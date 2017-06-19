@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="edu.cs.scu.dao.UserDao">
+    <resultMap id="TaskResultMap" type="UserBean">
+        <result column="mac" property="mac"/>
+        <result column="brand" property="brand"/>
+        <result column="first_visit_time" property="firstVisitTime"/>
+        <result column="last_visit_time" property="lastVisitTime"/>
+        <result column="new_ visit_time" property="newVisitTime"/>
+        <result column="activity_degree" property="activityDegree"/>
+    </resultMap>
+
+    <parameterMap id="TaskParameterMap" type="UserBean">
+        <parameter property="mac" jdbcType="VARCHAR" resultMap="TaskResultMap"/>
+        <parameter property="brand" jdbcType="VARCHAR" resultMap="TaskResultMap"/>
+        <parameter property="firstVisitTime" jdbcType="VARCHAR" resultMap="TaskResultMap"/>
+        <parameter property="lastVisitTime" jdbcType="VARCHAR" resultMap="TaskResultMap"/>
+        <parameter property="newVisitTime" jdbcType="VARCHAR" resultMap="TaskResultMap"/>
+        <parameter property="activityDegree" jdbcType="VARCHAR" resultMap="TaskResultMap"/>
+    </parameterMap>
+
+    <insert id="addUser" parameterMap="TaskParameterMap">
+        INSERT INTO "user"(
+        mac, brand, first_visit_time, last_visit_time, new_ visit_time, activity_degree
+        ) VALUES (#{mac},#{brand},#{firstVisitTime},#(lastVisitTime),#(lastVisitTime),
+        #(newVisitTime),#(activityDegree))
+    </insert>
+
+    <update id="updateUserLastVisitTimeByMac">
+        UPDATE "user" SET last_visit_time = #{lastVisitTime} WHERE mac = #{mac}
+    </update>
+
+    <update id="updateUserNowVisitTImeByMac">
+        UPDATE "user" SET new_ visit_time = #{nowVisitTime} WHERE mac = #{mac}
+    </update>
+
+    <update id="updateUserActivityDegreeByMac">
+        UPDATE "user" SET activity_degree = #{activityDegree} WHERE mac = #{mac}
+    </update>
+</mapper>
