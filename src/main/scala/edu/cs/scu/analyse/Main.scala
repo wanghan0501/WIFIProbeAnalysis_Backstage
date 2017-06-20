@@ -31,15 +31,23 @@ object Main {
 
     // 数据
     val wifiProbeData = InitUnits.getDStream(streamingContext)
+
     wifiProbeData.foreachRDD(foreachFunc = rdd => {
       // 如果当前窗口记录不为空
       if (rdd.count() >= 1) {
         // 读取格式化json
         val df = sQLContext.read.json(rdd)
         // 打印表结构
-        df.printSchema()
+        //df.printSchema()
         val dfRDD = df.foreach(t => {
           val datas = t.getSeq(0).asInstanceOf[Seq[Row]]
+          val id = t.getString(1)
+          val mmac = t.getString(2)
+          val rate = t.getString(3)
+          val time = DateUtil.parseTime(t.getString(4))
+          val wmac = t.getString(5)
+          val wssid = t.getString(6)
+
           val datasIterator = datas.iterator
           // 总人数，根据mac地址判断
           var totalFlow = 0
@@ -51,7 +59,7 @@ object Main {
             val mac = currentData.getString(0)
             totalFlow = totalFlow + 1
             val range = currentData.getString(1).toDouble
-            if (range > property.getVisitRange) {
+            if (range < property.getVisitRange) {
               checkInFlow = checkInFlow + 1
             }
             val rssi = currentData.getString(2)
@@ -59,19 +67,13 @@ object Main {
             // 插入用户数据
             val userDaoImpl = new UserDaoImpl
             val userBean = new UserBean
+            userBean.setShopId(1)
             userBean.setMac(mac)
             userBean.setBrand(MacUtil.getBrandByMac(mac))
             userDaoImpl.addUser(userBean)
           }
           // 进店率
-          val checkInRate = checkInFlow/checkInFlow
-
-          val id = t.getString(1)
-          val mmac = t.getString(2)
-          val rate = t.getString(3)
-          val time = DateUtil.parseTime(t.getString(4))
-          val wmac = t.getString(5)
-          val wssid = t.getString(6)
+          val checkInRate = checkInFlow / checkInFlow
 
           // 添加用户相关信息
           val userVisitDaoIml = new UserVisitDaoImpl
@@ -84,10 +86,6 @@ object Main {
           userVisit.setCheckInRate(checkInRate)
           userVisitDaoIml.addUserVisit(userVisit)
           println("insert finished")
-          // 如果间隔超过1分钟，则写入数据库
-          //          if (DateUtil.intervalOneMin(lastTime, time)) {
-          //            lastTime = time
-          //          }
         }
         )
       }

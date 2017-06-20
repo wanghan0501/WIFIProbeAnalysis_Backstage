@@ -35,13 +35,13 @@ def random_json(item):
              "time": time.strftime('%a %b %e %H:%M:%S %Y', time.localtime(time.time()))}
     mac_data = {"mac": random_mac(), "rssi": random_rssi(), "range": random_range()}
     mac_DataMul = []
-    for i in range(random.randrange(1, 5)):
+    for i in range(random.randrange(30, 50)):
         mac_DataMul.append(mac_data)
     probe['data'] = mac_DataMul
 
     probe = json.dumps(probe)
 
-    fileName = '/Users/mac/Workspace/Java/WIFIProbeAnalysis_Backstage/wifiProbe/source/A' + str(item)
+    fileName = '/Users/mac/Workspace/Java/WIFIProbeAnalysis_Backstage/wifiProbe/source/AA' + str(item)
     file = open(fileName, 'w')
     file.write(probe)
     file.close()

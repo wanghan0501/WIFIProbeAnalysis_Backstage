@@ -2,6 +2,8 @@ package edu.cs.scu.dao;
 
 import edu.cs.scu.bean.UserBean;
 
+import java.util.List;
+
 /**
  * 用户信息数据库接口
  *
@@ -13,9 +15,5 @@ public interface UserDao {
 
     void addUser(UserBean userBean);
 
-    void updateUserLastVisitTimeByMac(String mac, String lastVisitTime);
-
-    void updateUserNowVisitTImeByMac(String mac, String nowVisitTime);
-
-    void updateUserActivityDegreeByMac(String mac,String activityDegree);
+    void addUserByBatch(List<UserBean> userBeanList);
 }

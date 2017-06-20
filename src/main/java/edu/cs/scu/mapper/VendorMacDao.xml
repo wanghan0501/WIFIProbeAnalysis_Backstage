@@ -16,9 +16,9 @@
         VALUES (#{macPrefix},#{vendorName})
     </insert>
 
-    <insert id="addVendorMacBatch" parameterType="java.util.List" parameterMap="VendorMacParameterMap">
-        <foreach  collection="list" item="item" index="index" separator=";">
-            INSERT INTO vendor_macs(mac_prefix,vendor_name) VALUES(#{item.macPrefix}, #{item.vendor_name})
+    <insert id="addVendorMacBatch" parameterType="java.util.List">
+        <foreach  collection="list" item="vendor" separator=";">
+            INSERT INTO vendor_macs(mac_prefix,vendor_name) VALUES(#{vendor.macPrefix}, #{vendor.vendor_name})
         </foreach>
     </insert>
 

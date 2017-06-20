@@ -1,29 +1,30 @@
 package edu.cs.scu.dao.impl;
 
-import edu.cs.scu.bean.UserBean;
+import edu.cs.scu.bean.UserVisitTimeBean;
 import edu.cs.scu.conf.MybatisSqlSession;
-import edu.cs.scu.dao.UserDao;
+import edu.cs.scu.dao.UserVisitTimeDao;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.log4j.Logger;
 
 import java.util.List;
 
 /**
- * Created by Wang Han on 2017/6/19 14:02.
+ * Created by Wang Han on 2017/6/20 16:40.
  * E-mail address is wanghan0501@vip.qq.com.
  * Copyright © 2017 Wang Han. SCU. All Rights Reserved.
  */
-public class UserDaoImpl implements UserDao {
+public class UserVisitTimeDaoImpl implements UserVisitTimeDao {
+
     // 得到log记录器
-    private static final Logger logger = Logger.getLogger(UserDaoImpl.class);
+    private static final Logger logger = Logger.getLogger(UserVisitTimeDaoImpl.class);
 
     @Override
-    public void addUser(UserBean userBean) {
+    public void addUserVisitTime(UserVisitTimeBean userVisitTimeBean) {
         SqlSession sqlSession = MybatisSqlSession.getSqlSession();
 
         try {
-            UserDao userDao = sqlSession.getMapper(UserDao.class);
-            userDao.addUser(userBean);
+            UserVisitTimeDao userVisitTimeDao = sqlSession.getMapper(UserVisitTimeDao.class);
+            userVisitTimeDao.addUserVisitTime(userVisitTimeBean);
             sqlSession.commit();
         } catch (Exception e) {
             e.printStackTrace();
@@ -34,12 +35,12 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void addUserByBatch(List<UserBean> userBeanList) {
+    public void addUserVisitTimeByBatch(List<UserVisitTimeBean> userVisitTimeBeanList) {
         SqlSession sqlSession = MybatisSqlSession.getSqlSession();
 
         try {
-            UserDao userDao = sqlSession.getMapper(UserDao.class);
-            userDao.addUserByBatch(userBeanList);
+            UserVisitTimeDao userVisitTimeDao = sqlSession.getMapper(UserVisitTimeDao.class);
+            userVisitTimeDao.addUserVisitTimeByBatch(userVisitTimeBeanList);
             sqlSession.commit();
         } catch (Exception e) {
             e.printStackTrace();

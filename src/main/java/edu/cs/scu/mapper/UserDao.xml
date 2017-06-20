@@ -2,38 +2,31 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="edu.cs.scu.dao.UserDao">
     <resultMap id="UserResultMap" type="userBean">
+        <result column="shop_id" property="shopId"/>
         <result column="mac" property="mac"/>
         <result column="brand" property="brand"/>
-        <result column="first_visit_time" property="firstVisitTime"/>
-        <result column="last_visit_time" property="lastVisitTime"/>
-        <result column="new_visit_time" property="newVisitTime"/>
-        <result column="activity_degree" property="activityDegree"/>
     </resultMap>
 
     <parameterMap id="UserParameterMap" type="userBean">
-        <parameter property="mac" jdbcType="VARCHAR" resultMap="TaskResultMap"/>
-        <parameter property="brand" jdbcType="VARCHAR" resultMap="TaskResultMap"/>
-        <parameter property="firstVisitTime" jdbcType="VARCHAR" resultMap="TaskResultMap"/>
-        <parameter property="lastVisitTime" jdbcType="VARCHAR" resultMap="TaskResultMap"/>
-        <parameter property="newVisitTime" jdbcType="VARCHAR" resultMap="TaskResultMap"/>
-        <parameter property="activityDegree" jdbcType="VARCHAR" resultMap="TaskResultMap"/>
+        <parameter property="shopId" jdbcType="INTEGER" resultMap="UserResultMap"/>
+        <parameter property="mac" jdbcType="VARCHAR" resultMap="UserResultMap"/>
+        <parameter property="brand" jdbcType="VARCHAR" resultMap="UserResultMap"/>
     </parameterMap>
 
     <insert id="addUser" parameterMap="UserParameterMap">
-        INSERT INTO user(
-        mac, brand, first_visit_time, last_visit_time, new_visit_time, activity_degree
-        ) VALUES (#{mac},#{brand},#{firstVisitTime},#{lastVisitTime},#{newVisitTime},#{activityDegree})
+        INSERT INTO user
+        (shop_id,mac,brand)
+        VALUES
+        (#{shopId},#{mac},#{brand})
     </insert>
 
-    <update id="updateUserLastVisitTimeByMac">
-        UPDATE user SET last_visit_time = #{lastVisitTime} WHERE mac = #{mac}
-    </update>
+    <insert id="addUserByBatch" parameterType="list">
+        INSERT INTO user
+        (shop_id,mac,brand)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.shopId},#{item.mac},#{item.brand})
+        </foreach>
+    </insert>
 
-    <update id="updateUserNowVisitTImeByMac">
-        UPDATE user SET new_visit_time = #{nowVisitTime} WHERE mac = #{mac}
-    </update>
-
-    <update id="updateUserActivityDegreeByMac">
-        UPDATE user SET activity_degree = #{activityDegree} WHERE mac = #{mac}
-    </update>
 </mapper>

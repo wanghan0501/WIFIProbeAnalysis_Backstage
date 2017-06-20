@@ -11,7 +11,7 @@ public class TestMac {
     public static void main(String args[]){
         String name = MacUtil.getVendorByMac("00:00:00:28:7f:aa");
         System.out.println(name);
-        String brand = MacUtil.getBrandByMac("00:00:00:28:7f:aa");
+        String brand = MacUtil.getBrandByMac("2b:0e:fc:65:8b:c0");
         System.out.println(brand);
     }
 }

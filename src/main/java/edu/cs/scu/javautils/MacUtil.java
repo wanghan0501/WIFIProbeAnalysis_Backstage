@@ -24,11 +24,12 @@ public class MacUtil {
 
     public static synchronized String getBrandByMac(String macAddress) {
         String vendor = getVendorByMac(macAddress);
-        String brand = null;
+        String brand = "Unknown";
         try {
             brand = vendor.split(" ")[0];
         } catch (Exception e) {
-            brand = vendor;
+            if (null != vendor)
+                brand = vendor;
         }
         return brand;
     }
