@@ -3,22 +3,28 @@ package edu.cs.scu.bean;
 import java.io.Serializable;
 
 /**
+ * 店铺探针配置项实体
+ * <p>
  * Created by Wang Han on 2017/6/18 18:22.
  * E-mail address is wanghan0501@vip.qq.com.
  * Copyright © 2017 Wang Han. SCU. All Rights Reserved.
+ *
+ * @author Wang Han
  */
-public class PropertyBean implements Serializable{
+public class PropertyBean implements Serializable {
     private static final long serialVersinUID = 351877796426921776L;
 
     private int propertyId;
+    private int shopId;
+    private String mmac;
     private String visitCycle;
     private double visitRange;
     private int visitRSSI;
     private String activityDegree;
     private String visitTimeSplit;
-    private String propertyType;
+    private boolean propertyType;
 
-    public PropertyBean(){
+    public PropertyBean() {
 
     }
 
@@ -32,6 +38,22 @@ public class PropertyBean implements Serializable{
 
     public void setPropertyId(int propertyId) {
         this.propertyId = propertyId;
+    }
+
+    public int getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(int shopId) {
+        this.shopId = shopId;
+    }
+
+    public String getMmac() {
+        return mmac;
+    }
+
+    public void setMmac(String mmac) {
+        this.mmac = mmac;
     }
 
     public String getVisitCycle() {
@@ -74,11 +96,11 @@ public class PropertyBean implements Serializable{
         this.visitTimeSplit = visitTimeSplit;
     }
 
-    public String getPropertyType() {
+    public boolean getPropertyType() {
         return propertyType;
     }
 
-    public void setPropertyType(String propertyType) {
+    public void setPropertyType(boolean propertyType) {
         this.propertyType = propertyType;
     }
 }

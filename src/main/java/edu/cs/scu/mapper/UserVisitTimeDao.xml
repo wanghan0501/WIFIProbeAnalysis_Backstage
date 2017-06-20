@@ -13,7 +13,7 @@
         <parameter property="autoId" jdbcType="INTEGER" resultMap="UserVisitTimeResultMap"/>
         <parameter property="shopId" jdbcType="INTEGER" resultMap="UserVisitTimeResultMap"/>
         <parameter property="mac" jdbcType="VARCHAR" resultMap="UserVisitTimeResultMap"/>
-        <parameter property="visitTime" jdbcType="VARCHAR" resultMap="UserVisitTimeResultMap"/>
+        <parameter property="visitTime" jdbcType="CHAR" resultMap="UserVisitTimeResultMap"/>
     </parameterMap>
 
 

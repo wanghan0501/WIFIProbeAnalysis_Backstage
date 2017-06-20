@@ -11,9 +11,9 @@
 
     <parameterMap id="ShopParameterMap" type="shopBean">
         <parameter property="shopId" jdbcType="INTEGER" resultMap="ShopResultMap"/>
-        <parameter property="mmac" jdbcType="VARCHAR" resultMap="ShopResultMap"/>
-        <parameter property="lat" jdbcType="VARCHAR" resultMap="ShopResultMap"/>
-        <parameter property="lon" jdbcType="VARCHAR" resultMap="ShopResultMap"/>
+        <parameter property="mmac" jdbcType="CHAR" resultMap="ShopResultMap"/>
+        <parameter property="lat" jdbcType="DOUBLE" resultMap="ShopResultMap"/>
+        <parameter property="lon" jdbcType="DOUBLE" resultMap="ShopResultMap"/>
         <parameter property="addr" jdbcType="VARCHAR" resultMap="ShopResultMap"/>
     </parameterMap>
 
