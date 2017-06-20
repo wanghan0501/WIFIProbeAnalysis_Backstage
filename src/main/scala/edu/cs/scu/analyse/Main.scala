@@ -32,93 +32,96 @@ object Main {
     // 配置属性
     val property: PropertyBean = InitUnits.getPropertyFromDatabase()
 
-    // 数据
+    // 获取数据
     val wifiProbeData = InitUnits.getDStream(streamingContext)
 
-    wifiProbeData.foreachRDD(foreachFunc = rdd => {
-      // 如果当前窗口记录不为空
-      if (rdd.count() >= 1) {
-        // 读取格式化json
-        val df = sQLContext.read.json(rdd)
-        // 打印表结构
-        //df.printSchema()
-        val dfRDD = df.foreach(t => {
-          val datas = t.getSeq(0).asInstanceOf[Seq[Row]]
-          val id = t.getString(1)
-          val mmac = t.getString(2)
-          val rate = t.getString(3)
-          val time = DateUtil.parseTime(t.getString(4))
-          val wmac = t.getString(5)
-          val wssid = t.getString(6)
+    // 如果读入的数据不为空
+    if (wifiProbeData != null) {
+      wifiProbeData.foreachRDD(foreachFunc = rdd => {
+        // 如果当前窗口记录不为空
+        if (rdd.count() >= 1) {
+          // 读取格式化json
+          val df = sQLContext.read.json(rdd)
+          // 打印表结构
+          //df.printSchema()
+          val dfRDD = df.foreach(t => {
+            val datas = t.getSeq(0).asInstanceOf[Seq[Row]]
+            val id = t.getString(1)
+            val mmac = t.getString(2)
+            val rate = t.getString(3)
+            val time = DateUtil.parseTime(t.getString(4))
+            val wmac = t.getString(5)
+            val wssid = t.getString(6)
 
-          val datasIterator = datas.iterator
-          // 总人数，根据mac地址判断
-          var totalFlow = 0
-          // 入店总人数，根据rssi判断
-          var checkInFlow = 0
+            val datasIterator = datas.iterator
+            // 总人数，根据mac地址判断
+            var totalFlow = 0
+            // 入店总人数，根据rssi判断
+            var checkInFlow = 0
 
-          // 用户访问时间列表
-          val userVisitTimeBeanArrayList: util.ArrayList[UserVisitTimeBean] = new util.ArrayList[UserVisitTimeBean]
-          // 用户列表
-          val userBeanArrayList: util.ArrayList[UserBean] = new util.ArrayList[UserBean]()
+            // 用户访问时间列表
+            val userVisitTimeBeanArrayList: util.ArrayList[UserVisitTimeBean] = new util.ArrayList[UserVisitTimeBean]
+            // 用户列表
+            val userBeanArrayList: util.ArrayList[UserBean] = new util.ArrayList[UserBean]()
 
-          while (datasIterator.hasNext) {
-            val currentData = datasIterator.next()
-            val mac = currentData.getString(0)
-            totalFlow = totalFlow + 1
-            val range = currentData.getString(1).toDouble
-            if (range < property.getVisitRange) {
-              checkInFlow = checkInFlow + 1
+            while (datasIterator.hasNext) {
+              val currentData = datasIterator.next()
+              val mac = currentData.getString(0)
+              totalFlow = totalFlow + 1
+              val range = currentData.getString(1).toDouble
+              if (range < property.getVisitRange) {
+                checkInFlow = checkInFlow + 1
+              }
+              val rssi = currentData.getString(2)
+
+              // 向用户列表中加入新数据
+              val userBean = new UserBean
+              userBean.setShopId(1)
+              userBean.setMac(mac)
+              userBean.setBrand(MacAdressUtil.getBrandByMac(mac))
+              userBeanArrayList.add(userBean)
+
+              // 向用户访问列表中加入新数据
+              val userVisitTimeBean = new UserVisitTimeBean
+              userVisitTimeBean.setShopId(1)
+              userVisitTimeBean.setMac(mac)
+              userVisitTimeBean.setVisitTime(time)
+              userVisitTimeBeanArrayList.add(userVisitTimeBean)
+            } //end while
+
+            // 插入用户数据
+            val userDaoImpl = new UserDaoImpl
+            userDaoImpl.addUserByBatch(userBeanArrayList)
+
+            // 插入用户访问时间数据
+            val userVisitTimeDaoImpl = new UserVisitTimeDaoImpl
+            userVisitTimeDaoImpl.addUserVisitTimeByBatch(userVisitTimeBeanArrayList)
+
+            // 进店率
+            var checkInRate:Double = 0.0
+            try {
+              checkInRate = checkInFlow.toDouble / totalFlow.toDouble
+            } catch {
+              case e: ArithmeticException => checkInFlow = 0.0
             }
-            val rssi = currentData.getString(2)
 
-            // 向用户列表中加入新数据
-            val userBean = new UserBean
-            userBean.setShopId(1)
-            userBean.setMac(mac)
-            userBean.setBrand(MacAdressUtil.getBrandByMac(mac))
-            userBeanArrayList.add(userBean)
-
-            // 向用户访问列表中加入新数据
-            val userVisitTimeBean = new UserVisitTimeBean
-            userVisitTimeBean.setShopId(1)
-            userVisitTimeBean.setMac(mac)
-            userVisitTimeBean.setVisitTime(time)
-            userVisitTimeBeanArrayList.add(userVisitTimeBean)
-          } //end while
-
-          // 插入用户数据
-          val userDaoImpl = new UserDaoImpl
-          userDaoImpl.addUserByBatch(userBeanArrayList)
-
-          // 插入用户访问时间数据
-          val userVisitTimeDaoImpl = new UserVisitTimeDaoImpl
-          userVisitTimeDaoImpl.addUserVisitTimeByBatch(userVisitTimeBeanArrayList)
-
-          // 进店率
-          var checkInRate = 0
-          try {
-            checkInRate = checkInFlow / totalFlow
-          } catch {
-            case e: ArithmeticException => checkInFlow = 0
+            // 添加用户相关信息
+            val userVisitDaoIml = new UserVisitDaoImpl
+            val userVisit = new UserVisitBean
+            userVisit.setShopId(1)
+            userVisit.setMmac(mmac)
+            userVisit.setTime(time)
+            userVisit.setTotalFlow(totalFlow)
+            userVisit.setCheckInFlow(checkInFlow)
+            userVisit.setCheckInRate(checkInRate)
+            userVisitDaoIml.addUserVisit(userVisit)
+            println("insert finished")
           }
-
-          // 添加用户相关信息
-          val userVisitDaoIml = new UserVisitDaoImpl
-          val userVisit = new UserVisitBean
-          userVisit.setShopId(1L)
-          userVisit.setMmac(mmac)
-          userVisit.setTime(time)
-          userVisit.setTotalFlow(totalFlow)
-          userVisit.setCheckInFlow(checkInFlow)
-          userVisit.setCheckInRate(checkInRate)
-          userVisitDaoIml.addUserVisit(userVisit)
-          println("insert finished")
+          )
         }
-        )
       }
+      )
     }
-    )
 
     streamingContext.start()
     streamingContext.awaitTermination()

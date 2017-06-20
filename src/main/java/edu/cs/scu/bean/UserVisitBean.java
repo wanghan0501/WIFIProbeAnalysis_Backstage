@@ -9,14 +9,14 @@ import java.io.Serializable;
  * E-mail address is wanghan0501@vip.qq.com.
  * Copyright © 2017 Wang Han. SCU. All Rights Reserved.
  */
-public class UserVisitBean implements Serializable{
+public class UserVisitBean implements Serializable {
     private static final long serialVersinUID = 351877796426921776L;
 
-    private long shopId;
+    private int shopId;
     private String mmac;
     private String time;
-    private long totalFlow;
-    private long checkInFlow;
+    private int totalFlow;
+    private int checkInFlow;
     private double checkInRate;
     private double shallowVisitRate;
     private double deepVisitRate;
@@ -33,7 +33,7 @@ public class UserVisitBean implements Serializable{
         return shopId;
     }
 
-    public void setShopId(long shopId) {
+    public void setShopId(int shopId) {
         this.shopId = shopId;
     }
 
@@ -57,7 +57,7 @@ public class UserVisitBean implements Serializable{
         return totalFlow;
     }
 
-    public void setTotalFlow(long totalFlow) {
+    public void setTotalFlow(int totalFlow) {
         this.totalFlow = totalFlow;
     }
 
@@ -65,7 +65,7 @@ public class UserVisitBean implements Serializable{
         return checkInFlow;
     }
 
-    public void setCheckInFlow(long checkInFlow) {
+    public void setCheckInFlow(int checkInFlow) {
         this.checkInFlow = checkInFlow;
     }
 
@@ -73,7 +73,7 @@ public class UserVisitBean implements Serializable{
         return checkInRate;
     }
 
-    public void setCheckInRate(long checkInRate) {
+    public void setCheckInRate(double checkInRate) {
         this.checkInRate = checkInRate;
     }
 
@@ -81,7 +81,7 @@ public class UserVisitBean implements Serializable{
         return shallowVisitRate;
     }
 
-    public void setShallowVisitRate(long shallowVisitRate) {
+    public void setShallowVisitRate(double shallowVisitRate) {
         this.shallowVisitRate = shallowVisitRate;
     }
 
@@ -89,8 +89,7 @@ public class UserVisitBean implements Serializable{
         return deepVisitRate;
     }
 
-    public void setDeepVisitRate(long deepVisitRate) {
+    public void setDeepVisitRate(double deepVisitRate) {
         this.deepVisitRate = deepVisitRate;
     }
-
 }
