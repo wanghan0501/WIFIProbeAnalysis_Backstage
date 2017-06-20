@@ -20,7 +20,7 @@ import org.apache.spark.streaming.dstream.DStream
   * @author Wang Han
   */
 object RealtimeAnalysis {
-  def analysis(sQLContext: SQLContext, streamingContext: StreamingContext, data:DStream[String]): Unit ={
+  def analysis(sQLContext: SQLContext, streamingContext: StreamingContext, data: DStream[String]): Unit = {
     data.foreachRDD(foreachFunc = rdd => {
       // 如果当前窗口记录不为空
       if (rdd.count() >= 1) {
@@ -38,17 +38,16 @@ object RealtimeAnalysis {
           val wmac = t.getString(5)
           val wssid = t.getString(6)
 
-          val datasIterator = datas.iterator
           // 总人数，根据mac地址判断
           var totalFlow = 0
           // 入店总人数，根据rssi判断
           var checkInFlow = 0
-
           // 用户访问时间列表
           val userVisitTimeBeanArrayList: util.ArrayList[UserVisitTimeBean] = new util.ArrayList[UserVisitTimeBean]
           // 用户列表
           val userBeanArrayList: util.ArrayList[UserBean] = new util.ArrayList[UserBean]()
-
+          // 用户数据迭代器
+          val datasIterator = datas.iterator
           while (datasIterator.hasNext) {
             val currentData = datasIterator.next()
             // 手机Mac地址
@@ -57,8 +56,9 @@ object RealtimeAnalysis {
             val range = currentData.getString(1).toDouble
             // 信号强度
             val rssi = currentData.getString(2).toInt
+
             // 判断用户是否入店
-            if (DataUtils.isCheckIn(range,rssi)) {
+            if (DataUtils.isCheckIn(range, rssi)) {
               checkInFlow = checkInFlow + 1
             }
 
@@ -86,12 +86,7 @@ object RealtimeAnalysis {
           userVisitTimeDaoImpl.addUserVisitTimeByBatch(userVisitTimeBeanArrayList)
 
           // 进店率
-          var checkInRate:Double = 0.0
-          try {
-            checkInRate = checkInFlow.toDouble / totalFlow.toDouble
-          } catch {
-            case e: ArithmeticException => checkInRate = 0.0
-          }
+          var checkInRate = DataUtils.getCheckInRate(checkInFlow, totalFlow)
 
           // 添加用户相关信息
           val userVisitDaoIml = new UserVisitDaoImpl
@@ -103,6 +98,7 @@ object RealtimeAnalysis {
           userVisit.setCheckInFlow(checkInFlow)
           userVisit.setCheckInRate(checkInRate)
           userVisitDaoIml.addUserVisit(userVisit)
+          
           println("insert finished")
         }
         )
