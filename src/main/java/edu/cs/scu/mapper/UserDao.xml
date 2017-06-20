@@ -21,7 +21,7 @@
     </insert>
 
     <insert id="addUserByBatch" parameterType="list">
-        INSERT INTO user
+        INSERT IGNORE INTO user
         (shop_id,mac,brand)
         VALUES
         <foreach collection="list" item="item" separator=",">

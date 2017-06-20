@@ -22,6 +22,8 @@ import org.apache.spark.streaming.{Seconds, StreamingContext}
   */
 
 object InitUnits {
+  // 得到log记录器
+  private val logger = Logger.getLogger(classOf[InitUnits])
 
   /**
     * 初始化spark、sql环境
@@ -93,13 +95,21 @@ object InitUnits {
     * @return
     */
   def getDStream(streamingContext: StreamingContext): DStream[String] = {
-    if (ConfigurationManager.getBoolean(SparkConstants.SPARK_LOCAL)) {
-      //streamingContext.checkpoint(ConfigurationManager.getString(SparkConstants.SPARK_LOCAL_CHECK_POINT_DIR))
-      streamingContext.textFileStream(ConfigurationManager.getString(SparkConstants.SPARK_LOCAL_DATA_SOURCE))
-      //streamingContext.socketTextStream("localhost",ConfigurationManager.getInteger(SparkConstants.SPARK_LOCAL_SOCKET_PORT))
-    } else {
-      //streamingContext.checkpoint(ConfigurationManager.getString(SparkConstants.SPARK_CHECK_POINT_DIR))
-      streamingContext.textFileStream(ConfigurationManager.getString(SparkConstants.SPARK_DATA_SOURCE))
+    try {
+      if (ConfigurationManager.getBoolean(SparkConstants.SPARK_LOCAL)) {
+        //streamingContext.checkpoint(ConfigurationManager.getString(SparkConstants.SPARK_LOCAL_CHECK_POINT_DIR))
+        streamingContext.textFileStream(ConfigurationManager.getString(SparkConstants.SPARK_LOCAL_DATA_SOURCE))
+        //streamingContext.socketTextStream("localhost",ConfigurationManager.getInteger(SparkConstants.SPARK_LOCAL_SOCKET_PORT))
+      } else {
+        //streamingContext.checkpoint(ConfigurationManager.getString(SparkConstants.SPARK_CHECK_POINT_DIR))
+        streamingContext.textFileStream(ConfigurationManager.getString(SparkConstants.SPARK_DATA_SOURCE))
+      }
+    } catch {
+      case e: Exception => {
+        e.printStackTrace()
+        logger.error(e.getStackTrace)
+        null
+      }
     }
   }
 
@@ -113,4 +123,8 @@ object InitUnits {
     val propertyBean = propertyDao.getNewProperty
     propertyBean
   }
+}
+
+class InitUnits {
+
 }

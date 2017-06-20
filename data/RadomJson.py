@@ -41,7 +41,7 @@ def random_json(item):
 
     probe = json.dumps(probe)
 
-    fileName = '/Users/mac/Workspace/Java/WIFIProbeAnalysis_Backstage/wifiProbe/source/AA' + str(item)
+    fileName = '/Users/mac/Workspace/Java/WIFIProbeAnalysis_Backstage/wifiProbe/source/A' + str(item)
     file = open(fileName, 'w')
     file.write(probe)
     file.close()
@@ -54,7 +54,7 @@ if __name__ == '__main__':
     threads = []
     probeList = []
     index = 0
-    for i in range(5):
+    for i in range(10):
         random_json(i)
 
     print "all over %s" % ctime()

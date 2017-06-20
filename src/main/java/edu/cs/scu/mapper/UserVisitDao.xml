@@ -49,6 +49,31 @@
         )
     </insert>
 
+    <insert id="addUserVisitByBatch">
+        INSERT INTO user_visit (
+        shop_id,
+        mmac,
+        time,
+        total_flow,
+        check_in_flow,
+        check_in_rate,
+        shallow_visit_rate,
+        deep_visit_rate
+        )
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.shopId},
+            #{item.mmac},
+            #{item.time},
+            #{item.totalFlow},
+            #{item.checkInFlow},
+            #{item.checkInRate},
+            #{item.shallowVisitRate},
+            #{item.deepVisitRate}
+            )
+        </foreach>
+    </insert>
 
 
 </mapper>

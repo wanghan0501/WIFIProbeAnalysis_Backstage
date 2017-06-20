@@ -1,8 +1,11 @@
 package edu.cs.scu.analyse
 
-import edu.cs.scu.bean.{PropertyBean, UserBean, UserVisitBean}
-import edu.cs.scu.dao.impl.{UserDaoImpl, UserVisitDaoImpl}
-import edu.cs.scu.javautils.{DateUtil, MacUtil}
+import java.util
+import java.util.ArrayList
+
+import edu.cs.scu.bean.{PropertyBean, UserBean, UserVisitBean, UserVisitTimeBean}
+import edu.cs.scu.dao.impl.{UserDaoImpl, UserVisitDaoImpl, UserVisitTimeDaoImpl}
+import edu.cs.scu.javautils.{DateUtil, MacAdressUtil}
 import edu.cs.scu.scalautils.InitUnits
 import org.apache.spark.SparkContext
 import org.apache.spark.sql.{Row, SQLContext}
@@ -54,6 +57,11 @@ object Main {
           // 入店总人数，根据rssi判断
           var checkInFlow = 0
 
+          // 用户访问时间列表
+          val userVisitTimeBeanArrayList: util.ArrayList[UserVisitTimeBean] = new util.ArrayList[UserVisitTimeBean]
+          // 用户列表
+          val userBeanArrayList: util.ArrayList[UserBean] = new util.ArrayList[UserBean]()
+
           while (datasIterator.hasNext) {
             val currentData = datasIterator.next()
             val mac = currentData.getString(0)
@@ -64,16 +72,36 @@ object Main {
             }
             val rssi = currentData.getString(2)
 
-            // 插入用户数据
-            val userDaoImpl = new UserDaoImpl
+            // 向用户列表中加入新数据
             val userBean = new UserBean
             userBean.setShopId(1)
             userBean.setMac(mac)
-            userBean.setBrand(MacUtil.getBrandByMac(mac))
-            userDaoImpl.addUser(userBean)
-          }
+            userBean.setBrand(MacAdressUtil.getBrandByMac(mac))
+            userBeanArrayList.add(userBean)
+
+            // 向用户访问列表中加入新数据
+            val userVisitTimeBean = new UserVisitTimeBean
+            userVisitTimeBean.setShopId(1)
+            userVisitTimeBean.setMac(mac)
+            userVisitTimeBean.setVisitTime(time)
+            userVisitTimeBeanArrayList.add(userVisitTimeBean)
+          } //end while
+
+          // 插入用户数据
+          val userDaoImpl = new UserDaoImpl
+          userDaoImpl.addUserByBatch(userBeanArrayList)
+
+          // 插入用户访问时间数据
+          val userVisitTimeDaoImpl = new UserVisitTimeDaoImpl
+          userVisitTimeDaoImpl.addUserVisitTimeByBatch(userVisitTimeBeanArrayList)
+
           // 进店率
-          val checkInRate = checkInFlow / checkInFlow
+          var checkInRate = 0
+          try {
+            checkInRate = checkInFlow / totalFlow
+          } catch {
+            case e: ArithmeticException => checkInFlow = 0
+          }
 
           // 添加用户相关信息
           val userVisitDaoIml = new UserVisitDaoImpl

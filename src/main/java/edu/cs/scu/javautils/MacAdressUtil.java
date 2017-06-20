@@ -13,9 +13,9 @@ import org.apache.log4j.Logger;
  *
  * @author Wang Han
  */
-public class MacUtil {
+public class MacAdressUtil {
     // 得到log记录器
-    private static final Logger logger = Logger.getLogger(MacUtil.class);
+    private static final Logger logger = Logger.getLogger(MacAdressUtil.class);
 
     // 根据Mac地址获取制造厂商
     public static synchronized String getVendorByMac(String macAddress) {

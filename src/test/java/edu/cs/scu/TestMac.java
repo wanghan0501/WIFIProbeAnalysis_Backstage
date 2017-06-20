@@ -1,6 +1,6 @@
 package edu.cs.scu;
 
-import edu.cs.scu.javautils.MacUtil;
+import edu.cs.scu.javautils.MacAdressUtil;
 
 /**
  * Created by Wang Han on 2017/6/19 17:48.
@@ -9,9 +9,9 @@ import edu.cs.scu.javautils.MacUtil;
  */
 public class TestMac {
     public static void main(String args[]){
-        String name = MacUtil.getVendorByMac("00:00:00:28:7f:aa");
+        String name = MacAdressUtil.getVendorByMac("00:00:00:28:7f:aa");
         System.out.println(name);
-        String brand = MacUtil.getBrandByMac("2b:0e:fc:65:8b:c0");
+        String brand = MacAdressUtil.getBrandByMac("2b:0e:fc:65:8b:c0");
         System.out.println(brand);
     }
 }
