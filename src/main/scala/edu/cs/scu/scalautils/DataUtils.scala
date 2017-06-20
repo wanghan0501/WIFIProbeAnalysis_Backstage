@@ -1,5 +1,7 @@
 package edu.cs.scu.scalautils
 
+import edu.cs.scu.bean.PropertyBean
+
 /**
   * 获取数据的工具类
   *
@@ -11,6 +13,22 @@ package edu.cs.scu.scalautils
   */
 object DataUtils {
 
+  // 配置属性
+  private val property: PropertyBean = InitUnits.getPropertyFromDatabase()
+
+  /**
+    * 判断用户是否入店
+    *
+    * @param range 距离
+    * @param rssi 信号强度
+    * @return
+    */
+  def isCheckIn(range:Double,rssi:Int): Boolean ={
+    if(range < property.getVisitRange)
+      true
+    else
+      false
+  }
 }
 
 class DataUtils {

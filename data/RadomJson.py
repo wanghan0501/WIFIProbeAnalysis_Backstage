@@ -53,7 +53,7 @@ if __name__ == '__main__':
     threads = []
     probeList = []
     index = 0
-    for i in range(20):
+    for i in range(5):
         random_json(i)
 
     print "all over %s" % ctime()
