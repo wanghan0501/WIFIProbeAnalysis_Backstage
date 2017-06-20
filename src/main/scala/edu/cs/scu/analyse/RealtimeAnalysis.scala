@@ -39,9 +39,9 @@ object RealtimeAnalysis {
           val wssid = t.getString(6)
 
           // 总人数，根据mac地址判断
-          var totalFlow = 0
+          var totalFlow: Int = 0
           // 入店总人数，根据rssi判断
-          var checkInFlow = 0
+          var checkInFlow: Int = 0
           // 用户访问时间列表
           val userVisitTimeBeanArrayList: util.ArrayList[UserVisitTimeBean] = new util.ArrayList[UserVisitTimeBean]
           // 用户列表
@@ -86,7 +86,7 @@ object RealtimeAnalysis {
           userVisitTimeDaoImpl.addUserVisitTimeByBatch(userVisitTimeBeanArrayList)
 
           // 进店率
-          var checkInRate = DataUtils.getCheckInRate(checkInFlow, totalFlow)
+          val checkInRate = DataUtils.getCheckInRate(checkInFlow, totalFlow)
 
           // 添加用户相关信息
           val userVisitDaoIml = new UserVisitDaoImpl
@@ -98,7 +98,7 @@ object RealtimeAnalysis {
           userVisit.setCheckInFlow(checkInFlow)
           userVisit.setCheckInRate(checkInRate)
           userVisitDaoIml.addUserVisit(userVisit)
-          
+
           println("insert finished")
         }
         )
