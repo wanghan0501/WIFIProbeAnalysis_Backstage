@@ -97,11 +97,11 @@ object InitUnits {
   def getDStream(streamingContext: StreamingContext): DStream[String] = {
     try {
       if (ConfigurationManager.getBoolean(SparkConstants.SPARK_LOCAL)) {
-        //streamingContext.checkpoint(ConfigurationManager.getString(SparkConstants.SPARK_LOCAL_CHECK_POINT_DIR))
+        streamingContext.checkpoint(ConfigurationManager.getString(SparkConstants.SPARK_LOCAL_CHECK_POINT_DIR))
         streamingContext.textFileStream(ConfigurationManager.getString(SparkConstants.SPARK_LOCAL_DATA_SOURCE))
         //streamingContext.socketTextStream("localhost",ConfigurationManager.getInteger(SparkConstants.SPARK_LOCAL_SOCKET_PORT))
       } else {
-        //streamingContext.checkpoint(ConfigurationManager.getString(SparkConstants.SPARK_CHECK_POINT_DIR))
+        streamingContext.checkpoint(ConfigurationManager.getString(SparkConstants.SPARK_CHECK_POINT_DIR))
         streamingContext.textFileStream(ConfigurationManager.getString(SparkConstants.SPARK_DATA_SOURCE))
       }
     } catch {

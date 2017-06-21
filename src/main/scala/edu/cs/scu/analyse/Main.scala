@@ -18,11 +18,11 @@ import org.apache.spark.streaming.StreamingContext
 object Main {
   def main(args: Array[String]): Unit = {
     // 初始化变量
-    val init: (SparkContext, SQLContext, StreamingContext) = InitUnits.initSparkContext()
+    val initContext: (SparkContext, SQLContext, StreamingContext) = InitUnits.initSparkContext()
     // sql环境
-    val sQLContext = init._2
+    val sQLContext = initContext._2
     // 流环境
-    val streamingContext: StreamingContext = init._3
+    val streamingContext: StreamingContext = initContext._3
 
     // 获取数据
     val wifiProbeData = InitUnits.getDStream(streamingContext)

@@ -3,9 +3,12 @@ package edu.cs.scu.analyse
 import java.util
 
 import edu.cs.scu.bean.{UserBean, UserVisitBean, UserVisitTimeBean}
+import edu.cs.scu.conf.ConfigurationManager
+import edu.cs.scu.constants.SparkConstants
 import edu.cs.scu.dao.impl.{UserDaoImpl, UserVisitDaoImpl, UserVisitTimeDaoImpl}
 import edu.cs.scu.javautils.{DateUtil, MacAdressUtil}
 import edu.cs.scu.scalautils.DataUtils
+import org.apache.spark.HashPartitioner
 import org.apache.spark.sql.{Row, SQLContext}
 import org.apache.spark.streaming.StreamingContext
 import org.apache.spark.streaming.dstream.DStream
@@ -22,11 +25,6 @@ import org.apache.spark.streaming.dstream.DStream
 object RealTimeAnalysis {
   def analysis(sQLContext: SQLContext, streamingContext: StreamingContext, data: DStream[String]): Unit = {
 
-//    data.transform(rdd=>{
-//      val df = sQLContext.read.json(rdd)
-//      val a = df.flatMap(t=>t.getSeq(0).asInstanceOf[Seq[Row]].iterator)
-//      val b= a.map(t=>MacAdressUtil.getBrandByMac(t.getString(0))
-//    })
     data.foreachRDD(foreachFunc = rdd => {
       // 如果当前窗口记录不为空
       if (rdd.count() >= 1) {
@@ -107,9 +105,52 @@ object RealTimeAnalysis {
 
           println("insert finished")
         }
-        )// end foreach
+        ) // end foreach
       }
     }
     )
+  }
+
+  /**
+    * 统计进店用户所用手机品牌数量
+    * 统计结果形如:(Ximi,100),(Huawei,50)
+    *
+    * @param sQLContext
+    * @param streamingContext
+    * @param originData 原始数据
+    * @return
+    */
+  def getBrandCount(sQLContext: SQLContext, streamingContext: StreamingContext,
+                    originData: DStream[String]): DStream[(String, Int)] = {
+
+    // 将原始数据映射成（品牌，出现次数）的key-value键值对
+    val brandData = originData.transform(rdd => {
+      // 以json格式读入原始数据
+      val df = sQLContext.read.json(rdd)
+      // 提取原始数据中的data字段
+      val datas = df.flatMap(t => t.getSeq(0).asInstanceOf[Seq[Row]].iterator)
+      // 提取data中的brand字段
+      val brandData = datas.map(t => (MacAdressUtil.getBrandByMac(t.getString(0)), 1))
+      brandData
+    })
+
+    /**
+      * 内部更新函数
+      *
+      * @param iterator
+      * @return
+      */
+    def updateFunc(iterator: Iterator[(String, Seq[Int], Option[Int])]): Iterator[(String, Int)] = {
+      iterator.flatMap { case (x, y, z) => Some(y.sum + z.getOrElse(0)).map(i => (x, i)) }
+    }
+
+    // 更新品牌统计表
+    val brandCounts = brandData.updateStateByKey(updateFunc _,
+      new HashPartitioner(streamingContext.sparkContext.defaultParallelism),
+      rememberPartitioner = true)
+
+    brandCounts.print()
+
+    brandCounts
   }
 }
