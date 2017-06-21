@@ -4,7 +4,7 @@ import java.util
 
 import edu.cs.scu.bean.{UserBean, UserVisitBean, UserVisitTimeBean}
 import edu.cs.scu.conf.ConfigurationManager
-import edu.cs.scu.constants.SparkConstants
+import edu.cs.scu.constants.{SparkConstants, TimeConstants}
 import edu.cs.scu.dao.impl.{UserDaoImpl, UserVisitDaoImpl, UserVisitTimeDaoImpl}
 import edu.cs.scu.javautils.{DateUtil, MacAdressUtil}
 import edu.cs.scu.scalautils.DataUtils
@@ -25,7 +25,12 @@ import org.apache.spark.streaming.dstream.DStream
 object RealTimeAnalysis {
   def analysis(sQLContext: SQLContext, streamingContext: StreamingContext, data: DStream[String]): Unit = {
 
+    val preData = DataUtils.getPreData(sQLContext, data)
+    val phoneData = DataUtils.getPhoneData(sQLContext, preData)
+    val count = getBrandCount(sQLContext, streamingContext, phoneData)
+
     data.foreachRDD(foreachFunc = rdd => {
+
       // 如果当前窗口记录不为空
       if (rdd.count() >= 1) {
         // 读取格式化json
@@ -38,7 +43,7 @@ object RealTimeAnalysis {
           // Wi-Fi探针Mac地址
           val mmac = t.getString(2)
           val rate = t.getString(3)
-          val time = DateUtil.parseTime(t.getString(4))
+          val time = DateUtil.parseTime(t.getString(4), TimeConstants.TIME_FORMAT)
           val wmac = t.getString(5)
           val wssid = t.getString(6)
 
@@ -111,29 +116,18 @@ object RealTimeAnalysis {
     )
   }
 
+
   /**
     * 统计进店用户所用手机品牌数量
     * 统计结果形如:(Ximi,100),(Huawei,50)
     *
     * @param sQLContext
     * @param streamingContext
-    * @param originData 原始数据
+    * @param phoneData
     * @return
     */
   def getBrandCount(sQLContext: SQLContext, streamingContext: StreamingContext,
-                    originData: DStream[String]): DStream[(String, Int)] = {
-
-    // 将原始数据映射成（品牌，出现次数）的key-value键值对
-    val brandData = originData.transform(rdd => {
-      // 以json格式读入原始数据
-      val df = sQLContext.read.json(rdd)
-      // 提取原始数据中的data字段
-      val datas = df.flatMap(t => t.getSeq(0).asInstanceOf[Seq[Row]].iterator)
-      // 提取data中的brand字段
-      val brandData = datas.map(t => (MacAdressUtil.getBrandByMac(t.getString(0)), 1))
-      brandData
-    })
-
+                    phoneData: DStream[(String, String, Double, Int)]): DStream[(String, Int)] = {
     /**
       * 内部更新函数
       *
@@ -144,13 +138,16 @@ object RealTimeAnalysis {
       iterator.flatMap { case (x, y, z) => Some(y.sum + z.getOrElse(0)).map(i => (x, i)) }
     }
 
+    // 提取data中的brand字段
+    val brandData = phoneData.map(t => (t._1, 1))
+
     // 更新品牌统计表
     val brandCounts = brandData.updateStateByKey(updateFunc _,
       new HashPartitioner(streamingContext.sparkContext.defaultParallelism),
       rememberPartitioner = true)
 
-    brandCounts.print()
-
+    //brandCounts.print()
     brandCounts
   }
+
 }

@@ -1,5 +1,6 @@
 package edu.cs.scu;
 
+import edu.cs.scu.constants.TimeConstants;
 import edu.cs.scu.javautils.DateUtil;
 
 /**
@@ -11,7 +12,7 @@ public class TestDate {
 
     public static void main(String args[]) throws Exception{
 
-        System.out.println(DateUtil.parseTime("Thu May 04 23:33:43 2017"));
+        System.out.println(DateUtil.parseTime("2017-05-12 23:33:43", TimeConstants.DATE_FORMAT));
         System.out.println("0e:34:cb:30:15:72".length());
     }
 

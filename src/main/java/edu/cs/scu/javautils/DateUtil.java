@@ -1,6 +1,7 @@
 package edu.cs.scu.javautils;
 
 import edu.cs.scu.constants.DateConstants;
+import edu.cs.scu.constants.TimeConstants;
 import org.apache.log4j.Logger;
 
 import java.text.ParseException;
@@ -24,6 +25,7 @@ public class DateUtil {
     private static final Logger logger = Logger.getLogger(DateUtil.class);
     private static final SimpleDateFormat ENGLISH_TIME_FORMAT = new SimpleDateFormat("EEE MMM d HH:mm:ss yyyy", Locale.ENGLISH);
     private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
     /**
      * 获取现在时间（yyyy-MM-dd HH:mm:ss）
@@ -38,11 +40,19 @@ public class DateUtil {
      * 解析时间字符串
      *
      * @param time 时间字符串
-     * @return Date
+     * @return
      */
-    public static synchronized String parseTime(String time) {
+    public static synchronized String parseTime(String time,TimeConstants timeConstants) {
         try {
-            return TIME_FORMAT.format(ENGLISH_TIME_FORMAT.parse(time));
+            switch (timeConstants){
+                case ENGLISH_TIME_FORMAT:
+                    return ENGLISH_TIME_FORMAT.format(ENGLISH_TIME_FORMAT.parse(time));
+                case TIME_FORMAT:
+                    return TIME_FORMAT.format(ENGLISH_TIME_FORMAT.parse(time));
+                case DATE_FORMAT:
+                    return DATE_FORMAT.format(TIME_FORMAT.parse(time));
+            }
+
         } catch (ParseException e) {
             logger.error(e.getStackTrace());
             System.err.println(e.getStackTrace());

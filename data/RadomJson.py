@@ -34,7 +34,7 @@ def random_json(item):
     probe = {"id": '' + random_id(), "mmac": random_mac(), "rate": "3", "wssid": "test", "wmac": random_mac(),
              "time": time.strftime('%a %b %e %H:%M:%S %Y', time.localtime(time.time()))}
     mac_DataMul = []
-    for i in range(random.randrange(50, 100)):
+    for i in range(random.randrange(10, 30)):
         mac_DataMul.append({"mac": random_mac(), "rssi": random_rssi(), "range": random_range()})
     probe['data'] = mac_DataMul
 
@@ -53,7 +53,7 @@ if __name__ == '__main__':
     threads = []
     probeList = []
     index = 0
-    for i in range(5):
+    for i in range(2):
         random_json(i)
 
     print "all over %s" % ctime()

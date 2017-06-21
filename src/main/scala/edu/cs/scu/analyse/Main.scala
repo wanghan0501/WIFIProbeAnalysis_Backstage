@@ -24,12 +24,12 @@ object Main {
     // 流环境
     val streamingContext: StreamingContext = initContext._3
 
-    // 获取数据
-    val wifiProbeData = InitUnits.getDStream(streamingContext)
+    // 获取原始数据
+    val originData = InitUnits.getDStream(streamingContext)
 
     // 如果读入的数据不为空
-    if (wifiProbeData != null) {
-      RealTimeAnalysis.analysis(sQLContext, streamingContext, wifiProbeData)
+    if (originData != null) {
+      RealTimeAnalysis.analysis(sQLContext, streamingContext, originData)
     }
 
     streamingContext.start()
