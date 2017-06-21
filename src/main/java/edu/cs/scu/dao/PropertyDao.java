@@ -16,9 +16,9 @@ public interface PropertyDao {
     PropertyBean getNewProperty();
 
     // 使一条配置失效
-    void setyPropertyNotUse(int shopId, String mmac);
+    void setyPropertyNotUse(PropertyBean propertyBean);
 
-    void setPropertyUse(int shopId, String mmac);
+    void setPropertyUse(PropertyBean propertyBean);
 
     // 判断一条配置是否有效，通过商店ID，以及探针Mac地址
     boolean isUse(int shopId,String mmac);

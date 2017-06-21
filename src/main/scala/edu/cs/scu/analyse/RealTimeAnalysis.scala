@@ -21,6 +21,12 @@ import org.apache.spark.streaming.dstream.DStream
   */
 object RealTimeAnalysis {
   def analysis(sQLContext: SQLContext, streamingContext: StreamingContext, data: DStream[String]): Unit = {
+
+//    data.transform(rdd=>{
+//      val df = sQLContext.read.json(rdd)
+//      val a = df.flatMap(t=>t.getSeq(0).asInstanceOf[Seq[Row]].iterator)
+//      val b= a.map(t=>MacAdressUtil.getBrandByMac(t.getString(0))
+//    })
     data.foreachRDD(foreachFunc = rdd => {
       // 如果当前窗口记录不为空
       if (rdd.count() >= 1) {
@@ -101,7 +107,7 @@ object RealTimeAnalysis {
 
           println("insert finished")
         }
-        )
+        )// end foreach
       }
     }
     )

@@ -53,11 +53,11 @@ public class PropertyDaoImpl implements PropertyDao {
     }
 
     @Override
-    public void setyPropertyNotUse(int shopId, String mmac) {
+    public void setyPropertyNotUse(PropertyBean propertyBean) {
         SqlSession sqlSession = MybatisSqlSession.getSqlSession();
         try {
             PropertyDao propertyDao = sqlSession.getMapper(PropertyDao.class);
-            propertyDao.setyPropertyNotUse(shopId, mmac);
+            propertyDao.setyPropertyNotUse(propertyBean);
             sqlSession.commit();
         } catch (Exception e) {
             e.printStackTrace();
@@ -68,11 +68,11 @@ public class PropertyDaoImpl implements PropertyDao {
     }
 
     @Override
-    public void setPropertyUse(int shopId, String mmac) {
+    public void setPropertyUse(PropertyBean propertyBean) {
         SqlSession sqlSession = MybatisSqlSession.getSqlSession();
         try {
             PropertyDao propertyDao = sqlSession.getMapper(PropertyDao.class);
-            propertyDao.setPropertyUse(shopId, mmac);
+            propertyDao.setPropertyUse(propertyBean);
             sqlSession.commit();
         } catch (Exception e) {
             e.printStackTrace();

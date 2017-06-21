@@ -25,16 +25,20 @@
         <parameter property="propertyType" jdbcType="TINYINT" resultMap="PropertyResultMap"/>
     </parameterMap>
 
-    <update id="setyPropertyNotUse">
-        UPDATE TABLE property
+    <update id="setyPropertyNotUse" parameterMap="PropertyParameterMap">
+        UPDATE property
         SET property_type=FALSE
-        WHERE shop_id=#{0} AND mmac=#{1}
+        WHERE shop_id=#{shopId} AND mmac=#{mmac} AND visit_cycle=#{visitCycle}
+        AND visit_range=#{visitRange} AND visit_rssi=#{visitRange}
+        AND activity_degree=#{activityDegree} AND visit_time_split=#{visitTimeSplit}
     </update>
 
-    <update id="setPropertyUse">
-        UPDATE TABLE property
+    <update id="setPropertyUse" parameterMap="PropertyParameterMap">
+        UPDATE property
         SET property_type=TRUE
-        WHERE shop_id=#{0} AND mmac=#{1}
+        WHERE shop_id=#{shopId} AND mmac=#{mmac} AND visit_cycle=#{visitCycle}
+        AND visit_range=#{visitRange} AND visit_rssi=#{visitRange}
+        AND activity_degree=#{activityDegree} AND visit_time_split=#{visitTimeSplit}
     </update>
 
     <select id="getPropertyById" resultMap="PropertyResultMap">
