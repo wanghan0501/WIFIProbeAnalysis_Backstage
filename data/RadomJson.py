@@ -40,7 +40,7 @@ def random_json(item):
 
     probe = json.dumps(probe)
 
-    fileName = '/Users/mac/Workspace/Java/WIFIProbeAnalysis_Backstage/wifiProbe/source/A' + str(item)
+    fileName = '/Users/mac/Workspace/Java/WIFIProbeAnalysis_Backstage/wifiProbe/source/ABC' + str(item)
     file = open(fileName, 'w')
     file.write(probe)
     file.close()

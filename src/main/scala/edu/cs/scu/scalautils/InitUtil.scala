@@ -21,9 +21,9 @@ import org.apache.spark.streaming.{Seconds, StreamingContext}
   * @author Wang Han
   */
 
-object InitUnits {
+object InitUtil {
   // 得到log记录器
-  private val logger = Logger.getLogger(classOf[InitUnits])
+  private val logger = Logger.getLogger(classOf[InitUtil])
 
   /**
     * 初始化spark、sql环境
@@ -125,6 +125,6 @@ object InitUnits {
   }
 }
 
-class InitUnits {
+class InitUtil {
 
 }

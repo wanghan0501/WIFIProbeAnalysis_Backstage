@@ -16,23 +16,24 @@ import org.apache.spark.streaming.dstream.DStream
   *
   * @author Wang Han
   */
-object DataUtils {
+object DataUtil {
   // 得到log记录器
-  private val logger = Logger.getLogger(classOf[DataUtils])
+  private val logger = Logger.getLogger(classOf[DataUtil])
   // 配置属性
-  private val property: PropertyBean = InitUnits.getPropertyFromDatabase()
+  private val property: PropertyBean = InitUtil.getPropertyFromDatabase()
 
 
   /**
     * 原始数据经过预处理得到预处理数据
+    * 预处理后的数据形如(t,id,mmac,rate,time,vmac,wssid)
     *
     * @param sQLContext
     * @param originData
-    * @return
+    * @return (t,id,mmac,rate,time,vmac,wssid)
     */
-  def getPreData(sQLContext: SQLContext, originData: DStream[String]):
+  def getPreDStream(sQLContext: SQLContext, originDStream: DStream[String]):
   DStream[(Row, String, String, String, String, String, String)] = {
-    val preDStream = originData.transform(rdd => {
+    val preDStream = originDStream.transform(rdd => {
       val df = sQLContext.read.json(rdd)
       val preData = df.flatMap(t => {
         val id = t.getString(1)
@@ -53,26 +54,74 @@ object DataUtils {
 
   /**
     * 获得原始数据中data字段中的手机数据,并处理统计
-    * 返回值形如：(mac,brand,range,rssi)
+    * 返回值形如：(mmac=00:00:00:00:00:00|time=2017-04-04 12:12:12|brand=Ximi,
+    * 00:00:00:00:00:00,Ximi,range,rssi)
     *
     * @param sQLContext
     * @return
     */
 
-  def getPhoneData(sQLContext: SQLContext, preData: DStream[(Row, String, String, String, String, String, String)]):
-  DStream[(String, String, Double, Int)] = {
-    val phoneRDD = preData.map(tuple => {
+  def getPhoneDStream(sQLContext: SQLContext, preDStream: DStream[(Row, String, String, String, String, String, String)]):
+  DStream[(String, String, String, Double, Int)] = {
+    val phoneDStream = preDStream.map(tuple => {
       val mmac = tuple._3
-      val time = DateUtil.parseTime(tuple._5, TimeConstants.DATE_FORMAT)
+      val time = tuple._5
       val mac = tuple._1.getString(0)
       val brand = MacAdressUtil.getBrandByMac(tuple._1.getString(0))
       val range = tuple._1.getString(1).toDouble
       val rssi = tuple._1.getString(2).toInt
       val key = s"${TableConstants.FILED_MMAC}=${mmac}|${TableConstants.FIELD_TIME}=${time}|" +
         s"${TableConstants.FIELD_BRAND}=${brand}"
-      (key, brand, range, rssi)
+      (key, mac, brand, range, rssi)
     })
-    phoneRDD
+    phoneDStream
+  }
+
+
+  /**
+    * 获得流量统计DStream，形如（key,range,rssi）
+    *
+    * @param preDStream
+    * @return
+    */
+  def getFlowDStream(preDStream: DStream[(Row, String, String, String, String, String, String)]): DStream[(String, Double, Int)] = {
+    val flowDStream = preDStream.map(tuple => {
+      val mmac = tuple._3
+      val time = tuple._5
+      val range = tuple._1.getString(1).toDouble
+      val rssi = tuple._1.getString(2).toInt
+      val key = s"${TableConstants.FILED_MMAC}=${mmac}|${TableConstants.FIELD_TIME}=${time}"
+      (key, range, rssi)
+    })
+    flowDStream
+  }
+
+  /**
+    * 获得总人流量，返回值形如(mmac=00:00:00:00:00:00,time=2017-04-04 12:12:12,10)
+    *
+    * @return
+    */
+  def getTotalFlow(flowDStream: DStream[(String, Double, Int)]): DStream[(String, Long)] = {
+    val totalFlowDStream = flowDStream.map(t => t._1)
+    val a = totalFlowDStream.countByValue()
+    a.print()
+    a
+  }
+
+  /**
+    * 获得入店流量，返回值形如(mmac=00:00:00:00:00:00,time=2017-04-04 12:12:12,10)
+    *
+    * @return
+    */
+  def getCheckInFlow(flowDStream: DStream[(String, Double, Int)]): DStream[(String, Long)] = {
+    val checkInFlowDStream = flowDStream.filter(t => {
+      val range = t._2
+      val rssi = t._3
+      isCheckIn(range, rssi)
+    }).map(t => t._1)
+    val a = checkInFlowDStream.countByValue()
+    a.print()
+    a
   }
 
   /**
@@ -88,6 +137,7 @@ object DataUtils {
     else
       false
   }
+
 
   /**
     * 计算入店率
@@ -110,6 +160,6 @@ object DataUtils {
   }
 }
 
-class DataUtils {
+class DataUtil {
 
 }

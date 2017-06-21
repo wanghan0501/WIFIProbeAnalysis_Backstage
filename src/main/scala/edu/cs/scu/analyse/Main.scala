@@ -1,6 +1,6 @@
 package edu.cs.scu.analyse
 
-import edu.cs.scu.scalautils.{InitUnits}
+import edu.cs.scu.scalautils.{InitUtil}
 import org.apache.spark.SparkContext
 import org.apache.spark.sql.{SQLContext}
 import org.apache.spark.streaming.StreamingContext
@@ -18,14 +18,14 @@ import org.apache.spark.streaming.StreamingContext
 object Main {
   def main(args: Array[String]): Unit = {
     // 初始化变量
-    val initContext: (SparkContext, SQLContext, StreamingContext) = InitUnits.initSparkContext()
+    val initContext: (SparkContext, SQLContext, StreamingContext) = InitUtil.initSparkContext()
     // sql环境
     val sQLContext = initContext._2
     // 流环境
     val streamingContext: StreamingContext = initContext._3
 
     // 获取原始数据
-    val originData = InitUnits.getDStream(streamingContext)
+    val originData = InitUtil.getDStream(streamingContext)
 
     // 如果读入的数据不为空
     if (originData != null) {

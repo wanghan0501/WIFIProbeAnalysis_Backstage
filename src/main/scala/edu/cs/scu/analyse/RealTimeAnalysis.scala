@@ -4,11 +4,12 @@ import java.util
 
 import edu.cs.scu.bean.{UserBean, UserVisitBean, UserVisitTimeBean}
 import edu.cs.scu.conf.ConfigurationManager
-import edu.cs.scu.constants.{SparkConstants, TimeConstants}
+import edu.cs.scu.constants.{SparkConstants, TableConstants, TimeConstants}
 import edu.cs.scu.dao.impl.{UserDaoImpl, UserVisitDaoImpl, UserVisitTimeDaoImpl}
-import edu.cs.scu.javautils.{DateUtil, MacAdressUtil}
-import edu.cs.scu.scalautils.DataUtils
+import edu.cs.scu.javautils.{DateUtil, MacAdressUtil, StringUtil}
+import edu.cs.scu.scalautils.DataUtil
 import org.apache.spark.HashPartitioner
+import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.{Row, SQLContext}
 import org.apache.spark.streaming.StreamingContext
 import org.apache.spark.streaming.dstream.DStream
@@ -25,9 +26,14 @@ import org.apache.spark.streaming.dstream.DStream
 object RealTimeAnalysis {
   def analysis(sQLContext: SQLContext, streamingContext: StreamingContext, data: DStream[String]): Unit = {
 
-    val preData = DataUtils.getPreData(sQLContext, data)
-    val phoneData = DataUtils.getPhoneData(sQLContext, preData)
-    val count = getBrandCount(sQLContext, streamingContext, phoneData)
+    //    val preData = DataUtil.getPreDStream(sQLContext, data)
+    //    val phoneData = DataUtil.getPhoneDStream(sQLContext, preData)
+    //    UpdateDatabase.updateUser(phoneData)
+    //    UpdateDatabase.updateUserVisitTime(phoneData)
+    //    val brandCount = getBrandCount(sQLContext, streamingContext, phoneData)
+    //    val flowData = DataUtil.getFlowDStream(preData)
+    //    val totalFlowData = DataUtil.getTotalFlow(flowData)
+    //    val checkInFlowData = DataUtil.getCheckInFlow(flowData)
 
     data.foreachRDD(foreachFunc = rdd => {
 
@@ -67,7 +73,7 @@ object RealTimeAnalysis {
             val rssi = currentData.getString(2).toInt
 
             // 判断用户是否入店
-            if (DataUtils.isCheckIn(range, rssi)) {
+            if (DataUtil.isCheckIn(range, rssi)) {
               checkInFlow = checkInFlow + 1
             }
 
@@ -95,7 +101,7 @@ object RealTimeAnalysis {
           userVisitTimeDaoImpl.addUserVisitTimeByBatch(userVisitTimeBeanArrayList)
 
           // 进店率
-          val checkInRate = DataUtils.getCheckInRate(checkInFlow, totalFlow)
+          val checkInRate = DataUtil.getCheckInRate(checkInFlow, totalFlow)
 
           // 添加用户相关信息
           val userVisitDaoIml = new UserVisitDaoImpl
@@ -127,7 +133,7 @@ object RealTimeAnalysis {
     * @return
     */
   def getBrandCount(sQLContext: SQLContext, streamingContext: StreamingContext,
-                    phoneData: DStream[(String, String, Double, Int)]): DStream[(String, Int)] = {
+                    phoneData: DStream[(String, String, String, Double, Int)]): DStream[(String, Int)] = {
     /**
       * 内部更新函数
       *
@@ -139,14 +145,20 @@ object RealTimeAnalysis {
     }
 
     // 提取data中的brand字段
-    val brandData = phoneData.map(t => (t._1, 1))
+    val brandData = phoneData.map(t => {
+      val key = t._1
+      val time = StringUtil.getFieldFromConcatString(key, "\\|", TableConstants.FIELD_TIME)
+      val newKey = StringUtil.setFieldInConcatString(key, "\\|", TableConstants.FIELD_TIME,
+        DateUtil.parseTime(time, TimeConstants.DATE_FORMAT))
+      (newKey, 1)
+    })
 
     // 更新品牌统计表
     val brandCounts = brandData.updateStateByKey(updateFunc _,
       new HashPartitioner(streamingContext.sparkContext.defaultParallelism),
       rememberPartitioner = true)
 
-    //brandCounts.print()
+    brandCounts.print()
     brandCounts
   }
 

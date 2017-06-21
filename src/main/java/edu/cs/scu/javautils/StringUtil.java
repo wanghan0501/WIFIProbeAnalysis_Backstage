@@ -78,4 +78,31 @@ public class StringUtil {
 
         return buffer.toString();
     }
+
+
+    /**
+     * 从字符串中删去一个字段
+     *
+     * @param str
+     * @param delimiter
+     * @param field
+     * @return
+     */
+    public static synchronized String deleteFieldFromConcatString(String str, String delimiter, String field) {
+        String[] fields = str.split(delimiter);
+        StringBuffer buffer = new StringBuffer("");
+        int item = 0;
+        for (int i = 0; i < fields.length; i++) {
+            String fieldName = fields[i].split("=")[0];
+            if (!fieldName.equals(field)) {
+                buffer.append(fields[i]);
+                if (item < fields.length - 2) {
+                    buffer.append("|");
+                    item++;
+                }
+            }
+        }
+
+        return buffer.toString();
+    }
 }
