@@ -19,7 +19,7 @@ import org.apache.spark.streaming.dstream.DStream
   *
   * @author Wang Han
   */
-object RealtimeAnalysis {
+object RealTimeAnalysis {
   def analysis(sQLContext: SQLContext, streamingContext: StreamingContext, data: DStream[String]): Unit = {
     data.foreachRDD(foreachFunc = rdd => {
       // 如果当前窗口记录不为空

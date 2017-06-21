@@ -9,6 +9,6 @@ package edu.cs.scu.analyse
   *
   * @author Wang Han
   */
-object OfflineAnalysis {
+object OffLineAnalysis {
 
 }

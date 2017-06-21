@@ -29,7 +29,7 @@ object Main {
 
     // 如果读入的数据不为空
     if (wifiProbeData != null) {
-      RealtimeAnalysis.analysis(sQLContext, streamingContext, wifiProbeData)
+      RealTimeAnalysis.analysis(sQLContext, streamingContext, wifiProbeData)
     }
 
     streamingContext.start()
