@@ -2,9 +2,11 @@ package edu.cs.scu.scalautils
 
 import edu.cs.scu.bean.PropertyBean
 import edu.cs.scu.constants.{TableConstants, TimeConstants}
-import edu.cs.scu.javautils.{DateUtil, MacAdressUtil}
+import edu.cs.scu.javautils.{DateUtil, MacAdressUtil, StringUtil}
 import org.apache.log4j.Logger
+import org.apache.spark.HashPartitioner
 import org.apache.spark.sql.{Row, SQLContext}
+import org.apache.spark.streaming.StreamingContext
 import org.apache.spark.streaming.dstream.DStream
 
 /**
@@ -28,7 +30,7 @@ object DataUtil {
     * 预处理后的数据形如(t,id,mmac,rate,time,vmac,wssid)
     *
     * @param sQLContext
-    * @param originData
+    * @param originDStream
     * @return (t,id,mmac,rate,time,vmac,wssid)
     */
   def getPreDStream(sQLContext: SQLContext, originDStream: DStream[String]):
@@ -58,9 +60,9 @@ object DataUtil {
     * 00:00:00:00:00:00,Ximi,range,rssi)
     *
     * @param sQLContext
+    * @param preDStream
     * @return
     */
-
   def getPhoneDStream(sQLContext: SQLContext, preDStream: DStream[(Row, String, String, String, String, String, String)]):
   DStream[(String, String, String, Double, Int)] = {
     val phoneDStream = preDStream.map(tuple => {
@@ -96,21 +98,23 @@ object DataUtil {
     flowDStream
   }
 
+
   /**
     * 获得总人流量，返回值形如(mmac=00:00:00:00:00:00,time=2017-04-04 12:12:12,10)
     *
+    * @param flowDStream
     * @return
     */
   def getTotalFlow(flowDStream: DStream[(String, Double, Int)]): DStream[(String, Long)] = {
     val totalFlowDStream = flowDStream.map(t => t._1)
-    val a = totalFlowDStream.countByValue()
-    a.print()
-    a
+    totalFlowDStream.countByValue()
   }
+
 
   /**
     * 获得入店流量，返回值形如(mmac=00:00:00:00:00:00,time=2017-04-04 12:12:12,10)
     *
+    * @param flowDStream
     * @return
     */
   def getCheckInFlow(flowDStream: DStream[(String, Double, Int)]): DStream[(String, Long)] = {
@@ -119,9 +123,7 @@ object DataUtil {
       val rssi = t._3
       isCheckIn(range, rssi)
     }).map(t => t._1)
-    val a = checkInFlowDStream.countByValue()
-    a.print()
-    a
+    checkInFlowDStream.countByValue()
   }
 
   /**
@@ -157,6 +159,46 @@ object DataUtil {
       }
     }
     checkInRate
+  }
+
+
+  /**
+    * 统计进店用户所用手机品牌数量
+    * 统计结果形如:(Ximi,100),(Huawei,50)
+    *
+    * @param sQLContext
+    * @param streamingContext
+    * @param phoneData
+    * @return
+    */
+  def getBrandCount(sQLContext: SQLContext, streamingContext: StreamingContext,
+                    phoneData: DStream[(String, String, String, Double, Int)]): DStream[(String, Int)] = {
+    /**
+      * 内部更新函数
+      *
+      * @param iterator
+      * @return
+      */
+    def updateFunc(iterator: Iterator[(String, Seq[Int], Option[Int])]): Iterator[(String, Int)] = {
+      iterator.flatMap { case (x, y, z) => Some(y.sum + z.getOrElse(0)).map(i => (x, i)) }
+    }
+
+    // 提取data中的brand字段
+    val brandData = phoneData.map(t => {
+      val key = t._1
+      val time = StringUtil.getFieldFromConcatString(key, "\\|", TableConstants.FIELD_TIME)
+      val newKey = StringUtil.setFieldInConcatString(key, "\\|", TableConstants.FIELD_TIME,
+        DateUtil.parseTime(time, TimeConstants.DATE_FORMAT))
+      (newKey, 1)
+    })
+
+    // 更新品牌统计表
+    val brandCounts = brandData.updateStateByKey(updateFunc _,
+      new HashPartitioner(streamingContext.sparkContext.defaultParallelism),
+      rememberPartitioner = true)
+
+    brandCounts.print()
+    brandCounts
   }
 }
 

@@ -122,44 +122,4 @@ object RealTimeAnalysis {
     )
   }
 
-
-  /**
-    * 统计进店用户所用手机品牌数量
-    * 统计结果形如:(Ximi,100),(Huawei,50)
-    *
-    * @param sQLContext
-    * @param streamingContext
-    * @param phoneData
-    * @return
-    */
-  def getBrandCount(sQLContext: SQLContext, streamingContext: StreamingContext,
-                    phoneData: DStream[(String, String, String, Double, Int)]): DStream[(String, Int)] = {
-    /**
-      * 内部更新函数
-      *
-      * @param iterator
-      * @return
-      */
-    def updateFunc(iterator: Iterator[(String, Seq[Int], Option[Int])]): Iterator[(String, Int)] = {
-      iterator.flatMap { case (x, y, z) => Some(y.sum + z.getOrElse(0)).map(i => (x, i)) }
-    }
-
-    // 提取data中的brand字段
-    val brandData = phoneData.map(t => {
-      val key = t._1
-      val time = StringUtil.getFieldFromConcatString(key, "\\|", TableConstants.FIELD_TIME)
-      val newKey = StringUtil.setFieldInConcatString(key, "\\|", TableConstants.FIELD_TIME,
-        DateUtil.parseTime(time, TimeConstants.DATE_FORMAT))
-      (newKey, 1)
-    })
-
-    // 更新品牌统计表
-    val brandCounts = brandData.updateStateByKey(updateFunc _,
-      new HashPartitioner(streamingContext.sparkContext.defaultParallelism),
-      rememberPartitioner = true)
-
-    brandCounts.print()
-    brandCounts
-  }
-
 }
