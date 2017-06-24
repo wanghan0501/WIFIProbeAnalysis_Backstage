@@ -14,6 +14,9 @@ public class TestDate {
 
         System.out.println(DateUtil.parseTime("2017-05-12 23:33:43", TimeConstants.DATE_FORMAT));
         System.out.println("0e:34:cb:30:15:72".length());
+
+        System.out.println(DateUtil.after("2017-05-12 12:00:00","2017-05-12 12:00:59",TimeConstants.TIME_FORMAT,
+                59000));
     }
 
 }

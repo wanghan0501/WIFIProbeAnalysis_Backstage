@@ -57,6 +57,8 @@ object RealTimeAnalysis {
           var totalFlow: Int = 0
           // 入店总人数，根据rssi判断
           var checkInFlow: Int = 0
+          // 深度访问人数,根据访问时间判断
+          var deepVisitFlow: Int = 0
           // 用户访问时间列表
           val userVisitTimeBeanArrayList: util.ArrayList[UserVisitTimeBean] = new util.ArrayList[UserVisitTimeBean]
           // 用户列表
@@ -75,6 +77,10 @@ object RealTimeAnalysis {
             // 判断用户是否入店
             if (DataUtil.isCheckIn(range, rssi)) {
               checkInFlow = checkInFlow + 1
+            }
+
+            if (DataUtil.isDeepVisit(1, mac, time)) {
+              deepVisitFlow = deepVisitFlow + 1
             }
 
             // 向用户列表中加入新数据
@@ -102,7 +108,10 @@ object RealTimeAnalysis {
 
           // 进店率
           val checkInRate = DataUtil.getCheckInRate(checkInFlow, totalFlow)
-
+          // 深度访问率
+          val deepVisitRate = DataUtil.getDeepVisitRate(deepVisitFlow, checkInFlow)
+          // 浅访率
+          val shallowVisitRate = DataUtil.getShallowVisitRate(deepVisitFlow, checkInFlow)
           // 添加用户相关信息
           val userVisitDaoIml = new UserVisitDaoImpl
           val userVisit = new UserVisitBean
@@ -112,6 +121,8 @@ object RealTimeAnalysis {
           userVisit.setTotalFlow(totalFlow)
           userVisit.setCheckInFlow(checkInFlow)
           userVisit.setCheckInRate(checkInRate)
+          userVisit.setDeepVisitRate(deepVisitRate)
+          userVisit.setShallowVisitRate(shallowVisitRate)
           userVisitDaoIml.addUserVisit(userVisit)
 
           println("insert finished")

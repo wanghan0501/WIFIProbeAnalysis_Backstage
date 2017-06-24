@@ -49,4 +49,21 @@ public class UserVisitTimeDaoImpl implements UserVisitTimeDao {
             sqlSession.close();
         }
     }
+
+    @Override
+    public String getFirstVisitTIme(int shopId, String mac) {
+        SqlSession sqlSession = MybatisSqlSession.getSqlSession();
+        String firstTime = null;
+        try {
+            UserVisitTimeDao userVisitTimeDao = sqlSession.getMapper(UserVisitTimeDao.class);
+            firstTime = userVisitTimeDao.getFirstVisitTIme(shopId, mac);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getStackTrace());
+        } finally {
+            sqlSession.close();
+        }
+        
+        return firstTime;
+    }
 }

@@ -1,7 +1,9 @@
 package edu.cs.scu;
 
 import edu.cs.scu.bean.UserVisitTimeBean;
+import edu.cs.scu.constants.TimeConstants;
 import edu.cs.scu.dao.impl.UserVisitTimeDaoImpl;
+import edu.cs.scu.javautils.DateUtil;
 
 import java.util.ArrayList;
 
@@ -29,5 +31,10 @@ public class TestUserVisitTime {
         userVisitTimeBeanArrayList.add(userVisitTimeBean1);
 
         userVisitTimeDao.addUserVisitTimeByBatch(userVisitTimeBeanArrayList);
+
+        String firstTime = userVisitTimeDao.getFirstVisitTIme(1,"6c:70:f8:8e:7e:c1");
+        System.out.println(firstTime);
+        String secondeTime = "2017-06-21 21:02:02.0";
+        System.out.println(DateUtil.after(firstTime,secondeTime, TimeConstants.TIME_FORMAT,59000));
     }
 }

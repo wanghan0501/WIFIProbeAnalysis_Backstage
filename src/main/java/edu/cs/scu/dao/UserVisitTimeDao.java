@@ -1,6 +1,5 @@
 package edu.cs.scu.dao;
 
-import edu.cs.scu.bean.UserVisitBean;
 import edu.cs.scu.bean.UserVisitTimeBean;
 
 import java.util.List;
@@ -14,4 +13,6 @@ public interface UserVisitTimeDao {
     void addUserVisitTime(UserVisitTimeBean userVisitTimeBean);
 
     void addUserVisitTimeByBatch(List<UserVisitTimeBean> userVisitTimeBeanList);
+
+    String getFirstVisitTIme(int shopId,String mac);
 }

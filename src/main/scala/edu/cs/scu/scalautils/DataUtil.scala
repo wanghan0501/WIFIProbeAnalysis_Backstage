@@ -2,6 +2,7 @@ package edu.cs.scu.scalautils
 
 import edu.cs.scu.bean.PropertyBean
 import edu.cs.scu.constants.{TableConstants, TimeConstants}
+import edu.cs.scu.dao.impl.UserVisitTimeDaoImpl
 import edu.cs.scu.javautils.{DateUtil, MacAdressUtil, StringUtil}
 import org.apache.log4j.Logger
 import org.apache.spark.HashPartitioner
@@ -140,6 +141,20 @@ object DataUtil {
       false
   }
 
+  /**
+    * 判断用户是否是深度访问
+    *
+    * @param shopId 商店ID
+    * @param mac    用户Mac
+    * @param time   访问时间
+    * @return
+    */
+  def isDeepVisit(shopId: Int, mac: String, time: String): Boolean = {
+    val userVisitTimeDao = new UserVisitTimeDaoImpl
+    val fisrtTIme = userVisitTimeDao.getFirstVisitTIme(shopId, mac)
+    DateUtil.after(fisrtTIme, time, TimeConstants.TIME_FORMAT, property.getVisitTimeSplit.toLong)
+  }
+
 
   /**
     * 计算入店率
@@ -151,16 +166,49 @@ object DataUtil {
   def getCheckInRate(checkInFlow: Int, totalFlow: Int): Double = {
     var checkInRate: Double = 0.0
     try {
-      checkInRate = checkInFlow.toDouble / totalFlow.toDouble
+      if (totalFlow != 0)
+        checkInRate = checkInFlow.toDouble / totalFlow.toDouble
     } catch {
       case e: ArithmeticException => {
         checkInRate = 0.0
-        logger.error("checkInRate compute error")
       }
     }
     checkInRate
   }
 
+
+  /**
+    * 计算深访率
+    *
+    * @param deepVisitFlow
+    * @param checkInFlow
+    * @return
+    */
+  def getDeepVisitRate(deepVisitFlow: Int, checkInFlow: Int): Double = {
+    var deepVisitRate: Double = 0.0
+    try {
+      if (checkInFlow != 0)
+        deepVisitRate = deepVisitFlow.toDouble / checkInFlow.toDouble
+    } catch {
+      case e: ArithmeticException => {
+        deepVisitRate = 0.0
+      }
+    }
+    deepVisitRate
+  }
+
+  def getShallowVisitRate(deepVisitFlow: Int, checkInFlow: Int): Double = {
+    var shallowVisitRate: Double = 0.0
+    try {
+      if (checkInFlow != 0)
+        shallowVisitRate = 1.0 - deepVisitFlow.toDouble / checkInFlow.toDouble
+    } catch {
+      case e: ArithmeticException => {
+        shallowVisitRate = 0.0
+      }
+    }
+    shallowVisitRate
+  }
 
   /**
     * 统计进店用户所用手机品牌数量

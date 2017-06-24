@@ -1,6 +1,5 @@
 package edu.cs.scu.javautils;
 
-import edu.cs.scu.constants.DateConstants;
 import edu.cs.scu.constants.TimeConstants;
 import org.apache.log4j.Logger;
 
@@ -37,9 +36,9 @@ public class DateUtil {
     }
 
     /**
-     * 解析时间字符串
      *
-     * @param time 时间字符串
+     * @param time
+     * @param timeConstants
      * @return
      */
     public static synchronized String parseTime(String time,TimeConstants timeConstants) {
@@ -62,90 +61,100 @@ public class DateUtil {
     }
 
     /**
-     * 判断一个时间是否在另一个时间之前
      *
-     * @param time1 第一个时间
-     * @param time2 第二个时间
-     * @return 判断结果
+     * @param time1
+     * @param time2
+     * @param timeConstants
+     * @return
      */
-    public static synchronized boolean before(String time1, String time2) {
+    public static synchronized boolean before(String time1, String time2,TimeConstants timeConstants) {
         try {
-            Date dateTime1 = TIME_FORMAT.parse(time1);
-            Date dateTime2 = TIME_FORMAT.parse(time2);
+            Date dateTime1 = null;
+            Date dateTime2 = null;
+            switch (timeConstants){
+                case ENGLISH_TIME_FORMAT:
+                    dateTime1 = ENGLISH_TIME_FORMAT.parse(time1);
+                    dateTime2 = ENGLISH_TIME_FORMAT.parse(time2);
+                    break;
+                case TIME_FORMAT:
+                    dateTime1 = TIME_FORMAT.parse(time1);
+                    dateTime2 = TIME_FORMAT.parse(time2);
+                    break;
+            }
             if (dateTime1.before(dateTime2)) {
                 return true;
             }
         } catch (Exception e) {
-            logger.error(e.getMessage());
-            System.err.println(e.getMessage());
+            logger.error(e.getStackTrace());
+            System.err.println(e.getStackTrace());
         }
 
         return false;
     }
+
 
     /**
      * 判断一个时间是否在另一个时间之后
      *
-     * @param time1 第一个时间
-     * @param time2 第二个时间
-     * @return 判断结果
+     * @param time1
+     * @param time2
+     * @param timeConstants
+     * @return
      */
-    public static synchronized boolean after(String time1, String time2) {
+    public static synchronized boolean after(String time1, String time2,TimeConstants timeConstants) {
         try {
-            Date dateTime1 = TIME_FORMAT.parse(time1);
-            Date dateTime2 = TIME_FORMAT.parse(time2);
+            Date dateTime1 = null;
+            Date dateTime2 = null;
+            switch (timeConstants){
+                case ENGLISH_TIME_FORMAT:
+                    dateTime1 = ENGLISH_TIME_FORMAT.parse(time1);
+                    dateTime2 = ENGLISH_TIME_FORMAT.parse(time2);
+                    break;
+                case TIME_FORMAT:
+                    dateTime1 = TIME_FORMAT.parse(time1);
+                    dateTime2 = TIME_FORMAT.parse(time2);
+                    break;
+            }
             if (dateTime1.after(dateTime2)) {
                 return true;
             }
         } catch (Exception e) {
-            logger.error(e.getMessage());
-            System.err.println(e.getMessage());
+            logger.error(e.getStackTrace());
+            System.err.println(e.getStackTrace());
         }
 
         return false;
     }
 
     /**
-     * 判断一个时间是否在另一个时间之后10分钟
+     * 判断第二个时间是否在第一个时间之后
      *
-     * @param time1 第一个时间
-     * @param time2 第二个时间
-     * @return 判断结果
+     * @param time1
+     * @param time2
+     * @param timeConstants 解析的时间类型，枚举变量
+     * @param intervalMillisecond 间隔时常，单位毫秒
+     * @return
      */
-    public static boolean intervalTenMin(String time1, String time2) {
+    public static synchronized boolean after(String time1, String time2,TimeConstants timeConstants, long intervalMillisecond) {
         try {
-            Date dateTime1 = TIME_FORMAT.parse(time1);
-            Date dateTime2 = TIME_FORMAT.parse(time2);
-
-            if (dateTime2.getTime() - dateTime1.getTime() >= DateConstants.TIME_PERIOD_VALUE_10m) {
+            Date dateTime1 = null;
+            Date dateTime2 = null;
+            switch (timeConstants){
+                case ENGLISH_TIME_FORMAT:
+                    dateTime1 = ENGLISH_TIME_FORMAT.parse(time1);
+                    dateTime2 = ENGLISH_TIME_FORMAT.parse(time2);
+                    break;
+                case TIME_FORMAT:
+                    dateTime1 = TIME_FORMAT.parse(time1);
+                    dateTime2 = TIME_FORMAT.parse(time2);
+                    break;
+            }
+            if (dateTime2.getTime() - dateTime1.getTime() >= intervalMillisecond) {
                 return true;
             }
         } catch (Exception e) {
-            logger.error(e.getMessage());
-            System.err.println(e.getMessage());
-        }
-
-        return false;
-    }
-
-    /**
-     * 判断一个时间是否在另一个时间之后1分钟
-     *
-     * @param time1 第一个时间
-     * @param time2 第二个时间
-     * @return 判断结果
-     */
-    public static boolean intervalOneMin(String time1, String time2) {
-        try {
-            Date dateTime1 = TIME_FORMAT.parse(time1);
-            Date dateTime2 = TIME_FORMAT.parse(time2);
-
-            if (dateTime2.getTime() - dateTime1.getTime() >= DateConstants.TIME_PERIOD_VALUE_1m) {
-                return true;
-            }
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            System.err.println(e.getMessage());
+            logger.error(e.getStackTrace());
+            System.err.println(e.getStackTrace());
         }
 
         return false;
