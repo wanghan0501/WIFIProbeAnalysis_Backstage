@@ -1,8 +1,8 @@
 package edu.cs.scu.analyse
 
-import edu.cs.scu.scalautils.{InitUtil}
+import edu.cs.scu.scalautils.InitUtil
 import org.apache.spark.SparkContext
-import org.apache.spark.sql.{SQLContext}
+import org.apache.spark.sql.SQLContext
 import org.apache.spark.streaming.StreamingContext
 
 

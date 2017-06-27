@@ -3,13 +3,10 @@ package edu.cs.scu.analyse
 import java.util
 
 import edu.cs.scu.bean.{UserBean, UserVisitBean, UserVisitTimeBean}
-import edu.cs.scu.conf.ConfigurationManager
-import edu.cs.scu.constants.{SparkConstants, TableConstants, TimeConstants}
+import edu.cs.scu.constants.TimeConstants
 import edu.cs.scu.dao.impl.{UserDaoImpl, UserVisitDaoImpl, UserVisitTimeDaoImpl}
-import edu.cs.scu.javautils.{DateUtil, MacAdressUtil, StringUtil}
+import edu.cs.scu.javautils.{DateUtil, MacAdressUtil}
 import edu.cs.scu.scalautils.DataUtil
-import org.apache.spark.HashPartitioner
-import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.{Row, SQLContext}
 import org.apache.spark.streaming.StreamingContext
 import org.apache.spark.streaming.dstream.DStream

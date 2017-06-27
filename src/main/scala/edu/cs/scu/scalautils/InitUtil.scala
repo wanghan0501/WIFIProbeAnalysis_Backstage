@@ -5,11 +5,11 @@ import edu.cs.scu.conf.ConfigurationManager
 import edu.cs.scu.constants.SparkConstants
 import edu.cs.scu.dao.impl.PropertyDaoImpl
 import org.apache.log4j.{Level, Logger}
-import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.sql.SQLContext
 import org.apache.spark.sql.hive.HiveContext
 import org.apache.spark.streaming.dstream.DStream
 import org.apache.spark.streaming.{Seconds, StreamingContext}
+import org.apache.spark.{SparkConf, SparkContext}
 
 /**
   * 初始化spark环境工具
