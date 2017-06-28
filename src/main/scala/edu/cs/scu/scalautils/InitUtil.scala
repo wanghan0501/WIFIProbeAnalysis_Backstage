@@ -7,7 +7,9 @@ import edu.cs.scu.dao.impl.PropertyDaoImpl
 import org.apache.log4j.{Level, Logger}
 import org.apache.spark.sql.SQLContext
 import org.apache.spark.sql.hive.HiveContext
-import org.apache.spark.streaming.dstream.DStream
+import org.apache.spark.storage.StorageLevel
+import org.apache.spark.streaming.dstream.{DStream, ReceiverInputDStream}
+import org.apache.spark.streaming.kafka.KafkaUtils
 import org.apache.spark.streaming.{Seconds, StreamingContext}
 import org.apache.spark.{SparkConf, SparkContext}
 
@@ -111,6 +113,19 @@ object InitUtil {
         null
       }
     }
+  }
+
+  /**
+    * 从kafka中获取数据
+    *
+    * @param streamingContext
+    * @return
+    */
+  def getDStreamFromKafka(streamingContext: StreamingContext): ReceiverInputDStream[(String, String)] = {
+    KafkaUtils.createStream(streamingContext, ConfigurationManager.getString(SparkConstants.KAFKA_ZOOKEEPER_QUORUM),
+      ConfigurationManager.getString(SparkConstants.KAFKA_GROUP_ID), Map(ConfigurationManager.getString(
+        SparkConstants.KAFKA_TOPICS) -> ConfigurationManager.getInteger(SparkConstants.KAFKA_NUMBER_PARTITIONS)),
+      StorageLevel.MEMORY_AND_DISK_SER)
   }
 
   /**

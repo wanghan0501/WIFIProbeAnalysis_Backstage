@@ -24,6 +24,8 @@ object Main {
     // 流环境
     val streamingContext: StreamingContext = initContext._3
 
+//    val kafkaData = InitUtil.getDStreamFromKafka(streamingContext).map(_._2)
+
     // 获取原始数据
     val originData = InitUtil.getDStream(streamingContext)
 

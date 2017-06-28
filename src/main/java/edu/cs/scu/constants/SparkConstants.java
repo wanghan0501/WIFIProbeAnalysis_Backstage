@@ -27,4 +27,9 @@ public interface SparkConstants {
     String SPARK_DATA_SOURCE="spark.data.source";
     // 定义集群检查点目录
     String SPARK_CHECK_POINT_DIR = "spark.check.point.dir";
+
+    String KAFKA_ZOOKEEPER_QUORUM = "kafka.zookeeper.quorum";
+    String KAFKA_GROUP_ID = "kafka.group.id";
+    String KAFKA_TOPICS = "kafka.topics";
+    String KAFKA_NUMBER_PARTITIONS="kafka.number.partitions";
 }

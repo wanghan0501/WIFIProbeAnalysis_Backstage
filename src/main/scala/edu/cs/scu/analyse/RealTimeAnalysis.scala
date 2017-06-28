@@ -41,14 +41,25 @@ object RealTimeAnalysis {
         // 打印表结构
         //df.printSchema()
         val dfRDD = df.foreach(t => {
-          val datas = t.getSeq(0).asInstanceOf[Seq[Row]]
-          val id = t.getString(1)
-          // Wi-Fi探针Mac地址
-          val mmac = t.getString(2)
-          val rate = t.getString(3)
-          val time = DateUtil.parseTime(t.getString(4), TimeConstants.TIME_FORMAT)
-          val wmac = t.getString(5)
-          val wssid = t.getString(6)
+          // 地址信息
+          val addr = t.getString(0)
+          val datas = t.getSeq(1).asInstanceOf[Seq[Row]]
+          // 嗅探器设备id
+          val id = t.getString(2)
+          // 纬度
+          val lat = t.getString(3).toDouble
+          // 经度
+          val lon = t.getString(4).toDouble
+          // 嗅探器设备自身WiFi mac
+          val mmac = t.getString(5)
+          // 发送频率
+          val rate = t.getString(6)
+          // 时间戳，采集到这些mac的时间
+          val time = DateUtil.parseTime(t.getString(7), TimeConstants.TIME_FORMAT)
+          // 嗅探器设备连接的WIFI的mac地址
+          val wmac = t.getString(8)
+          // 嗅探器设备连接的WIFI的ssid
+          val wssid = t.getString(9)
 
           // 总人数，根据mac地址判断
           var totalFlow: Int = 0
@@ -64,12 +75,21 @@ object RealTimeAnalysis {
           val datasIterator = datas.iterator
           while (datasIterator.hasNext) {
             val currentData = datasIterator.next()
-            // 手机Mac地址
-            val mac = currentData.getString(0)
+            // 手机是否睡眠
+            val ds = currentData.getString(0)
+            // 采集到的手机mac地址
+            val mac = currentData.getString(1)
             totalFlow = totalFlow + 1
-            val range = currentData.getString(1).toDouble
-            // 信号强度
-            val rssi = currentData.getString(2).toInt
+            // 手机距离嗅探器的测距距离字段，单位米
+            val range = currentData.getString(2).toDouble
+            // 探针是否探测到路由设备
+            val router = currentData.getString(3)
+            // 手机的信号强度
+            val rssi = currentData.getString(4).toInt
+            // 是否与路由器相连
+            val tc = currentData.getString(5)
+            // 目标设备的mac地址，手机连接的WIFI的mac地址
+            val tmac = currentData.getString(6)
 
             // 判断用户是否入店
             if (DataUtil.isCheckIn(range, rssi)) {
