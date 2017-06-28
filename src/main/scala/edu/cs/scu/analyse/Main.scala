@@ -24,15 +24,16 @@ object Main {
     // 流环境
     val streamingContext: StreamingContext = initContext._3
 
-//    val kafkaData = InitUtil.getDStreamFromKafka(streamingContext).map(_._2)
+    val kafkaData = InitUtil.getDStreamFromKafka(streamingContext).map(_._2)
+    kafkaData.print()
 
-    // 获取原始数据
-    val originData = InitUtil.getDStream(streamingContext)
-
-    // 如果读入的数据不为空
-    if (originData != null) {
-      RealTimeAnalysis.analysis(sQLContext, streamingContext, originData)
-    }
+//    // 获取原始数据
+//    val originData = InitUtil.getDStream(streamingContext)
+//
+//    // 如果读入的数据不为空
+//    if (originData != null) {
+//      RealTimeAnalysis.analysis(sQLContext, streamingContext, originData)
+//    }
 
     streamingContext.start()
     streamingContext.awaitTermination()
