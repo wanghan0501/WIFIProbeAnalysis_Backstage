@@ -47,17 +47,8 @@ def random_json():
 
 
 if __name__ == '__main__':
-    threads = []
-    probeList = []
-    index=0
     while True:
         random_json()
-        #for i in range(2):
-   #         t = threading.Thread(target=random_json)
- #          threads.append(t)
- #       for i in range(2):
- #           threads[i].setDaemon(True)
- #           threads[i].start()
         time.sleep(1)
 
     print "all over %s" %ctime()

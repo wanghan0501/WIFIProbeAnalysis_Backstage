@@ -124,8 +124,8 @@ object InitUtil {
   def getDStreamFromKafka(streamingContext: StreamingContext): ReceiverInputDStream[(String, String)] = {
     val zkQuorum = ConfigurationManager.getString(SparkConstants.KAFKA_ZOOKEEPER_QUORUM)
     val groupId = ConfigurationManager.getString(SparkConstants.KAFKA_GROUP_ID)
-    val topics = Map(ConfigurationManager.getString(SparkConstants.KAFKA_TOPICS) ->
-      ConfigurationManager.getInteger(SparkConstants.KAFKA_NUMBER_PARTITIONS).toInt)
+    val topics = ConfigurationManager.getString(SparkConstants.KAFKA_TOPICS).split(",").
+      map((_, ConfigurationManager.getInteger(SparkConstants.KAFKA_NUMBER_PARTITIONS).toInt)).toMap
     KafkaUtils.createStream(streamingContext,zkQuorum,groupId,topics)
   }
 
