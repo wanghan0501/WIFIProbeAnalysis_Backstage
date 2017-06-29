@@ -27,7 +27,7 @@ public class KafkaConsumer {
     public void setProperties() {
         Properties props = new Properties();
         props.put("topic","my-test");
-        props.put("bootstrap.servers", "10.116.155.136:9092,10.116.22.16:9092,10.116.33.158:9092");// 该地址是集群的子集，用来探测集群。
+        props.put("bootstrap.servers", "120.24.238.195:9092,120.25.162.32:9092,112.74.114.226:9092,112.74.124.150:9092");// 该地址是集群的子集，用来探测集群。
         props.put("group.id", "group1");// cousumer的分组id
         props.put("enable.auto.commit", "true");// 自动提交offsets
         props.put("auto.commit.interval.ms", "1000");// 每隔1s，自动提交offsets
